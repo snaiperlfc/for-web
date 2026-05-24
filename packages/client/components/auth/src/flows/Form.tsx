@@ -154,11 +154,30 @@ export function Form(props: Props) {
   /**
    * Handle submission
    * @param event Form Event
+   *
+   * STELLIS: on submission error (bad invite / wrong password / etc.) we
+   * snapshot the field values up front and restore them after the error
+   * surfaces. Without this, retrying made the user re-type email + password
+   * + invite from scratch every time — hCaptcha re-execution or some
+   * sibling re-render was wiping the uncontrolled inputs.
+   *
+   * Restoration is done on the next microtask so it runs after Solid has
+   * finished re-rendering the error banner. We skip the `captcha` field
+   * because it's a one-shot token that has to be regenerated each attempt.
    */
   async function onSubmit(event: Event) {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget as HTMLFormElement);
+    const form = event.currentTarget as HTMLFormElement;
+    const formData = new FormData(form);
+
+    // Snapshot user-typed values before any async work.
+    const snapshot: Record<string, string> = {};
+    for (const [name, value] of formData.entries()) {
+      if (typeof value === "string" && name !== "captcha") {
+        snapshot[name] = value;
+      }
+    }
 
     if (props.captcha) {
       if (!hcaptcha) return alert("hCaptcha not loaded!");
@@ -171,6 +190,22 @@ export function Form(props: Props) {
     } catch (err) {
       console.error(err);
       setError(err);
+      // Re-populate any fields that got wiped during submission.
+      queueMicrotask(() => {
+        for (const [name, value] of Object.entries(snapshot)) {
+          const el = form.elements.namedItem(name);
+          if (
+            el instanceof HTMLInputElement &&
+            el.value === "" &&
+            value !== ""
+          ) {
+            el.value = value;
+            // Fire input event so any reactive listeners (TextField label
+            // float-state, validity, etc.) see the restored value.
+            el.dispatchEvent(new Event("input", { bubbles: true }));
+          }
+        }
+      });
     }
   }
 
