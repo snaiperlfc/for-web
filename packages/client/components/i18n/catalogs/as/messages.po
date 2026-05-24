@@ -47,6 +47,11 @@ msgstr ""
 msgid "{0, plural, one {# blocked message} other {# blocked messages}}"
 msgstr ""
 
+#. placeholder {0}: onlineMembers()
+#: src/interface/channels/text/MemberSidebar.tsx
+msgid "{0, plural, one {# member online} other {# members online}}"
+msgstr ""
+
 #: src/interface/navigation/channels/HomeSidebar.tsx
 #~ msgid "{0, plural, one {# Member} other {# Members}}"
 #~ msgstr ""
@@ -97,8 +102,8 @@ msgstr ""
 msgid "{0} left"
 msgstr ""
 
-#. placeholder {0}: (message.systemMessage as ChannelOwnershipChangeSystemMessage).from?.username
-#. placeholder {1}: (message.systemMessage as ChannelOwnershipChangeSystemMessage).to?.username
+#. placeholder {0}: (message.systemMessage as ChannelOwnershipChangeSystemMessage).from ?.username
+#. placeholder {1}: (message.systemMessage as ChannelOwnershipChangeSystemMessage).to ?.username
 #: components/client/NotificationsWorker.tsx
 msgid "{0} made {1} the new group owner"
 msgstr ""
@@ -275,8 +280,8 @@ msgid "Able to speak in voice call"
 msgstr ""
 
 #: components/auth/src/AuthPage.tsx
-msgid "About"
-msgstr "বিষয়ে"
+#~ msgid "About"
+#~ msgstr "বিষয়ে"
 
 #: components/modal/modals/SignOutSessions.tsx
 msgid "Accept"
@@ -425,8 +430,6 @@ msgstr ""
 msgid "Avatar"
 msgstr ""
 
-#: src/interface/channels/AgeGate.tsx
-#: src/interface/channels/AgeGate.tsx
 #: components/modal/modals/MFAFlow.tsx
 #: components/auth/src/flows/FlowLogin.tsx
 #: components/auth/src/flows/FlowCreate.tsx
@@ -769,8 +772,8 @@ msgid "Continue to app"
 msgstr ""
 
 #: components/app/interface/settings/user/Language.tsx
-msgid "Contribute a language"
-msgstr ""
+#~ msgid "Contribute a language"
+#~ msgstr ""
 
 #: src/interface/navigation/channels/HomeSidebar.tsx
 msgid "Conversations"
@@ -1085,6 +1088,10 @@ msgstr ""
 msgid "Developer Documentation"
 msgstr ""
 
+#: src/interface/navigation/channels/HomeSidebar.tsx
+msgid "Direct Messages"
+msgstr ""
+
 #: components/app/interface/settings/user/Account.tsx
 msgid "Disable Account"
 msgstr ""
@@ -1110,8 +1117,8 @@ msgid "Discord RPC"
 msgstr ""
 
 #: src/interface/Home.tsx
-msgid "Discover Stoat"
-msgstr ""
+#~ msgid "Discover Stoat"
+#~ msgstr ""
 
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
 msgid "Display & Text"
@@ -1146,12 +1153,12 @@ msgid "Don't notify others that you've left"
 msgstr ""
 
 #: components/app/interface/settings/UserSettings.tsx
-msgid "Donate"
-msgstr ""
+#~ msgid "Donate"
+#~ msgstr ""
 
 #: src/interface/Home.tsx
-msgid "Donate to Stoat"
-msgstr ""
+#~ msgid "Donate to Stoat"
+#~ msgstr ""
 
 #: components/ui/components/features/profiles/ProfileBadges.tsx
 msgid "Donated to Stoat"
@@ -1230,6 +1237,10 @@ msgstr ""
 msgid "Email"
 msgstr "ইমেইল"
 
+#: components/i18n/errors.ts
+msgid "Email is already registered. Try logging in instead."
+msgstr ""
+
 #: components/app/interface/settings/server/emojis/EmojiList.tsx
 msgid "Emoji Name"
 msgstr ""
@@ -1254,6 +1265,10 @@ msgstr ""
 msgid "Enable Desktop Notifications"
 msgstr ""
 
+#: components/app/interface/settings/user/Notifications.tsx
+msgid "Enable Push Notifications"
+msgstr ""
+
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
 msgid "Enable transparency glass/blur effects (slow on older machines)"
 msgstr ""
@@ -1276,8 +1291,8 @@ msgid "Enter a new password."
 msgstr "আপোনাৰ ইমেইল প্ৰবিষ্ট কৰক।"
 
 #: src/interface/channels/AgeGate.tsx
-msgid "Enter Channel"
-msgstr "চেনেলত প্ৰৱেশ কৰক"
+#~ msgid "Enter Channel"
+#~ msgstr "চেনেলত প্ৰৱেশ কৰক"
 
 #: components/modal/modals/MFAEnableTOTP.tsx
 msgid "Enter Code"
@@ -1313,6 +1328,14 @@ msgstr ""
 msgid "Extreme violence, gore or animal cruelty"
 msgstr ""
 
+#: components/client/NotificationsController.ts
+msgid "Failed to enable notifications. Stoat does not have notification permission."
+msgstr ""
+
+#: components/client/NotificationsController.ts
+msgid "Failed to enable push notifications. Please try again later."
+msgstr ""
+
 #: components/i18n/errors.ts
 msgid "Failed to process the image you provided."
 msgstr ""
@@ -1325,14 +1348,13 @@ msgstr ""
 msgid "Failed to verify!"
 msgstr "প্ৰমাণিত কৰিব পৰা নগল!"
 
-#: components/app/interface/settings/UserSettings.tsx
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "Feedback"
 msgstr ""
 
 #: src/interface/Home.tsx
-msgid "Find a community based on your hobbies or interests."
-msgstr "আপোনাৰ ৰুচি বা আগ্ৰহৰ ওপৰত আধাৰিত কৰি এটা সম্প্ৰদায় বিচাৰি উলিয়াওক।"
+#~ msgid "Find a community based on your hobbies or interests."
+#~ msgstr "আপোনাৰ ৰুচি বা আগ্ৰহৰ ওপৰত আধাৰিত কৰি এটা সম্প্ৰদায় বিচাৰি উলিয়াওক।"
 
 #: components/auth/src/flows/FlowHome.tsx
 msgid "Find your com<0/>munity,<1/>connect with the world."
@@ -1400,8 +1422,8 @@ msgid "Get active recovery codes"
 msgstr ""
 
 #: src/interface/Home.tsx
-msgid "Give feedback on Stoat"
-msgstr ""
+#~ msgid "Give feedback on Stoat"
+#~ msgstr ""
 
 #: components/modal/modals/ReportContent.tsx
 msgid "Give us some detail"
@@ -1424,7 +1446,6 @@ msgstr "লগইনলৈ ঘূৰি যাওক"
 msgid "Go to account settings to edit your username"
 msgstr ""
 
-#: src/interface/Home.tsx
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "Go to the Stoat Lounge"
 msgstr ""
@@ -1466,8 +1487,8 @@ msgid "Hello!"
 msgstr "নমস্কাৰ!"
 
 #: components/app/interface/settings/user/Language.tsx
-msgid "Help contribute to an existing or new language"
-msgstr ""
+#~ msgid "Help contribute to an existing or new language"
+#~ msgstr ""
 
 #: components/ui/components/features/profiles/ProfileBadges.tsx
 msgid "Helped translate Stoat"
@@ -1492,8 +1513,8 @@ msgid "Home"
 msgstr "ঘৰ"
 
 #: src/interface/channels/AgeGate.tsx
-msgid "I confirm that I am at least 18 years old."
-msgstr "মই নিশ্চিত কৰো যে মোৰ বয়স ১৮ বছৰতকৈ অধিক।"
+#~ msgid "I confirm that I am at least 18 years old."
+#~ msgstr "মই নিশ্চিত কৰো যে মোৰ বয়স ১৮ বছৰতকৈ অধিক।"
 
 #: components/modal/modals/LinkWarning.tsx
 msgid "I understand the consequences"
@@ -1547,6 +1568,10 @@ msgstr ""
 msgid "Invite Code"
 msgstr ""
 
+#: components/i18n/errors.ts
+msgid "Invite is invalid or has already been used."
+msgstr ""
+
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Invite Others"
 msgstr ""
@@ -1588,7 +1613,6 @@ msgstr ""
 #~ msgid "Join call"
 #~ msgstr ""
 
-#: src/interface/Home.tsx
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "Join the Stoat Lounge"
 msgstr ""
@@ -1639,6 +1663,10 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
+#: components/auth/src/flows/FlowLogin.tsx
+msgid "Last registration step. Pick a username people will see — latin letters, digits, underscore, at least 2 characters. You can change it later in settings."
+msgstr ""
+
 #: components/app/interface/settings/user/Sync.tsx
 msgid "Last sync <0/>"
 msgstr ""
@@ -1680,8 +1708,8 @@ msgid "Let Stoat use its own custom titlebar."
 msgstr ""
 
 #: src/interface/Home.tsx
-msgid "Let us know how we can improve our app by giving us feedback."
-msgstr "আমাক মতামত দি আমি কেনেকৈ আমাৰ এপটো উন্নত কৰিব পাৰোঁ আমাক জনাব।"
+#~ msgid "Let us know how we can improve our app by giving us feedback."
+#~ msgstr "আমাক মতামত দি আমি কেনেকৈ আমাৰ এপটো উন্নত কৰিব পাৰোঁ আমাক জনাব।"
 
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
 msgid "Light"
@@ -1936,8 +1964,8 @@ msgid "My Account"
 msgstr "মোৰ একাউণ্ট"
 
 #: components/app/interface/settings/UserSettings.tsx
-msgid "My Bots"
-msgstr ""
+#~ msgid "My Bots"
+#~ msgstr ""
 
 #: components/modal/modals/RenameSession.tsx
 #: components/modal/modals/CreateCategory.tsx
@@ -1998,6 +2026,7 @@ msgstr ""
 
 #: components/app/menus/ServerContextMenu.tsx
 #: components/app/menus/shared/NotificationContextMenu.tsx
+#: components/app/interface/settings/UserSettings.tsx
 msgid "Notifications"
 msgstr ""
 
@@ -2120,8 +2149,8 @@ msgid "Pick a Screen to Share"
 msgstr ""
 
 #: components/auth/src/flows/FlowLogin.tsx
-msgid "Pick a username that you want people to be able to find you by. This can be changed later in your user settings."
-msgstr ""
+#~ msgid "Pick a username that you want people to be able to find you by. This can be changed later in your user settings."
+#~ msgstr ""
 
 #: components/app/menus/MessageContextMenu.tsx
 msgid "Pin message"
@@ -2164,8 +2193,8 @@ msgid "Powered by RNNoise"
 msgstr ""
 
 #: components/auth/src/AuthPage.tsx
-msgid "Privacy Policy"
-msgstr "গোপনীয়তা নীতি"
+#~ msgid "Privacy Policy"
+#~ msgstr "গোপনীয়তা নীতি"
 
 #: components/markdown/plugins/anchors.tsx
 msgid "Private Channel"
@@ -2228,6 +2257,14 @@ msgstr ""
 
 #: components/app/interface/settings/user/Notifications.tsx
 msgid "Receive notifications while the app is open and in the background."
+msgstr ""
+
+#: components/app/interface/settings/user/Notifications.tsx
+msgid "Receive notifications while the tab is open."
+msgstr ""
+
+#: components/app/interface/settings/user/Notifications.tsx
+msgid "Receive push notifications while the app is closed."
 msgstr ""
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardStatus.tsx
@@ -2444,6 +2481,14 @@ msgstr ""
 msgid "Screen Share Settings"
 msgstr ""
 
+#: components/ui/components/features/messaging/composition/picker/EmojiPicker.tsx
+msgid "Search for emojis..."
+msgstr ""
+
+#: components/ui/components/features/messaging/composition/picker/GifPicker.tsx
+msgid "Search for GIFs..."
+msgstr ""
+
 #: components/modal/modals/AddBot.tsx
 msgid "Search for groups..."
 msgstr ""
@@ -2451,6 +2496,10 @@ msgstr ""
 #: components/modal/modals/CreateGroup.tsx
 #: components/modal/modals/AddMembersToGroup.tsx
 msgid "Search for users..."
+msgstr ""
+
+#: src/interface/channels/ChannelHeader.tsx
+msgid "Search messages..."
 msgstr ""
 
 #: components/app/interface/settings/user/Feedback.tsx
@@ -2649,8 +2698,8 @@ msgid "Sounds"
 msgstr ""
 
 #: components/app/interface/settings/UserSettings.tsx
-msgid "Source Code"
-msgstr ""
+#~ msgid "Source Code"
+#~ msgstr ""
 
 #: components/modal/modals/ReportContent.tsx
 msgid "Spam or similar platform abuse"
@@ -2725,8 +2774,8 @@ msgid "Suggest new Stoat features on GitHub discussions."
 msgstr ""
 
 #: src/interface/Home.tsx
-msgid "Support the project by donating - thank you!"
-msgstr "দান কৰি প্ৰকল্পটো সমৰ্থন কৰক - ধন্যবাদ!"
+#~ msgid "Support the project by donating - thank you!"
+#~ msgstr "দান কৰি প্ৰকল্পটো সমৰ্থন কৰক - ধন্যবাদ!"
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardPreview.tsx
 msgid "Switch to this voice channel"
@@ -2769,8 +2818,8 @@ msgid "Temporarily prevent lower-ranking members from interacting"
 msgstr ""
 
 #: components/auth/src/AuthPage.tsx
-msgid "Terms of Service"
-msgstr "সেৱাৰ চৰ্তাৱলী"
+#~ msgid "Terms of Service"
+#~ msgstr "সেৱাৰ চৰ্তাৱলী"
 
 #: components/modal/modals/CreateChannel.tsx
 msgid "Text Channel"
@@ -2806,16 +2855,16 @@ msgid "This channel is about..."
 msgstr ""
 
 #: src/interface/channels/AgeGate.tsx
-msgid "This channel is marked as mature."
-msgstr ""
+#~ msgid "This channel is marked as mature."
+#~ msgstr ""
 
 #: src/interface/channels/AgeGate.tsx
-msgid "This channel is not available in your region while we review options on legal compliance."
-msgstr ""
+#~ msgid "This channel is not available in your region while we review options on legal compliance."
+#~ msgstr ""
 
 #: src/interface/channels/AgeGate.tsx
-msgid "This content is not available in your region."
-msgstr ""
+#~ msgid "This content is not available in your region."
+#~ msgstr ""
 
 #: components/i18n/errors.ts
 msgid "This feature is currently disabled."
@@ -2856,6 +2905,10 @@ msgstr ""
 
 #: components/app/interface/settings/server/Overview.tsx
 msgid "This server is about..."
+msgstr ""
+
+#: components/i18n/errors.ts
+msgid "This server is invite-only. Ask a member to send you an invite link."
 msgstr ""
 
 #: components/i18n/errors.ts
@@ -3151,8 +3204,8 @@ msgid "What's new"
 msgstr ""
 
 #: components/app/interface/settings/UserSettings.tsx
-msgid "What's New"
-msgstr ""
+#~ msgid "What's New"
+#~ msgstr ""
 
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Whether other users can edit these settings"
@@ -3203,8 +3256,6 @@ msgstr ""
 msgid "You can re-open it later, but it will disappear on both sides."
 msgstr ""
 
-#: src/interface/Home.tsx
-#: src/interface/Home.tsx
 #: components/app/interface/settings/user/Feedback.tsx
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "You can report issues and discuss improvements with us directly here."
