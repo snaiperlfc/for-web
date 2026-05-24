@@ -96,20 +96,14 @@ export default function FlowLogin() {
           </>
         }
       >
-        <Match when={isLoggedIn()}>
-          {/*
-            STELLIS: hard reload instead of SPA <Navigate>. Stoat's post-login
-            transition from /login/auth → /app via SPA routing leaves Layout's
-            children un-hydrated until manual reload (user saw "только контур" —
-            blank card shell). Forcing a real navigation re-runs the full
-            bootstrap with the freshly cached session and the layout paints.
-          */}
-          {(() => {
-            const next = state.layout.popNextPath() ?? "/app";
-            queueMicrotask(() => window.location.replace(next));
-            return <CircularProgress />;
-          })()}
-        </Match>
+        {/*
+          STELLIS: Switch order matters. isLoggedIn() now returns true during
+          Onboarding/LoggingIn (so Interface.tsx doesn't bounce users to /login
+          mid-username-pick). That means we have to check the Onboarding +
+          LoggingIn lifecycle states BEFORE the generic isLoggedIn match, or
+          the username form is never shown and the user is yanked to /app
+          before their account has a username record.
+        */}
         <Match when={lifecycle.state() === State.LoggingIn}>
           <CircularProgress />
         </Match>
@@ -180,6 +174,20 @@ export default function FlowLogin() {
               </Button>
             </Row>
           </Form>
+        </Match>
+        <Match when={isLoggedIn()}>
+          {/*
+            STELLIS: post-login (or post-onboarding) hard reload to /app
+            instead of SPA <Navigate>. Stoat's SPA transition leaves Layout's
+            children un-hydrated until manual reload (the "только контур"
+            blank card bug). Forcing a real navigation re-bootstraps with the
+            cached session and paints the app properly.
+          */}
+          {(() => {
+            const next = state.layout.popNextPath() ?? "/app";
+            queueMicrotask(() => window.location.replace(next));
+            return <CircularProgress />;
+          })()}
         </Match>
       </Switch>
     </>

@@ -468,8 +468,16 @@ export default class ClientController {
     this.isLoggedIn = this.isLoggedIn.bind(this);
     this.isError = this.isError.bind(this);
 
+    // STELLIS: include LoggingIn + Onboarding so the in-app shell does NOT
+    // redirect to /login while the user is mid-onboarding (picking their
+    // username). The session token is already valid at that point — only
+    // the user record is missing. Upstream Stoat omitted both states, which
+    // made the username modal flash and then bounce the user back to /login,
+    // forcing them to re-enter email + password after submitting a username.
     this.isLoggedInState = createMemo(() =>
       [
+        State.LoggingIn,
+        State.Onboarding,
         State.Connecting,
         State.Connected,
         State.Disconnected,
