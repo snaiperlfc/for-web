@@ -6,7 +6,9 @@ packages:
   - packages/js-lingui-solid/packages/jest-mocks
   - packages/js-lingui-solid/packages/babel-plugin-extract-messages
   - packages/js-lingui-solid/packages/babel-plugin-lingui-macro
+allowBuilds:
+  esbuild: true
 nodeLinker: isolated
 onlyBuiltDependencies:
-  - '@swc/core'
+  - "@swc/core"
   - esbuild
