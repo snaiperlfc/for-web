@@ -77,9 +77,13 @@ export function MessageComposition(props: Props) {
       : 2000;
   };
 
-  const isAlmostTooLong = () => messageLength() > maxMessageLength() - 200;
+  // STELLIS: surface the counter much earlier so people see the limit coming
+  // (was 200 — too late; users would only notice when already a paragraph
+  // over). Also dropped the bizarre "wayTooLong = +9999" upstream threshold —
+  // any overflow shows "Too long" immediately.
+  const isAlmostTooLong = () => messageLength() > maxMessageLength() - 500;
 
-  const wayTooLong = () => messageLength() > maxMessageLength() + 9999;
+  const isTooLong = () => messageLength() > maxMessageLength();
 
   // Whether the send button should be active/clickable
   const canSend = createMemo(() => {
@@ -303,6 +307,37 @@ export function MessageComposition(props: Props) {
 
   return (
     <>
+      {/*
+        STELLIS: explicit inline error when the draft is over the server's
+        message_length limit. Upstream only changes the floating counter to
+        "Too Long" and silently disables Send — users hit Enter, nothing
+        happens, no explanation. This banner sits right above the input so
+        it's impossible to miss and tells them exactly what to do.
+      */}
+      <Show when={isTooLong()}>
+        <div
+          role="alert"
+          style={{
+            margin: "0 8px 6px",
+            padding: "8px 12px",
+            "border-radius": "8px",
+            "font-size": "0.85em",
+            "line-height": "1.4",
+            background: "color-mix(in oklab, var(--md-sys-color-error) 12%, transparent)",
+            color: "var(--md-sys-color-error)",
+            border: "1px solid color-mix(in oklab, var(--md-sys-color-error) 35%, transparent)",
+          }}
+        >
+          {/* Russian-only on purpose — Stellis is closed RU instance. */}
+          Сообщение слишком длинное:{" "}
+          <strong>
+            {messageLength()} / {maxMessageLength()}
+          </strong>{" "}
+          символов. Разбей на несколько сообщений или сократи на{" "}
+          <strong>{messageLength() - maxMessageLength()}</strong>{" "}
+          символов.
+        </div>
+      </Show>
       <Show when={state.draft.hasAdditionalElements(props.channel.id)}>
         <Keybind
           keybind={KeybindAction.CHAT_REMOVE_COMPOSITION_ELEMENT}
@@ -368,10 +403,10 @@ export function MessageComposition(props: Props) {
             <Show when={isAlmostTooLong()}>
               <MessageBox.FloatingAction
                 size="normal"
-                error={messageLength() > maxMessageLength()}
+                error={isTooLong()}
               >
-                {wayTooLong()
-                  ? "Too Long"
+                {isTooLong()
+                  ? `−${messageLength() - maxMessageLength()}`
                   : maxMessageLength() - messageLength()}
               </MessageBox.FloatingAction>
             </Show>
