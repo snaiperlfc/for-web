@@ -243,7 +243,7 @@ export function ChannelHeader(props: Props) {
             borderRadius: "var(--borderRadius-full)",
             background: "var(--md-sys-color-surface-container-high)",
           })}
-          placeholder="Search messages..."
+          placeholder={t`Search messages...`}
           value={searchValue()!}
           onChange={(e) =>
             e.currentTarget.value

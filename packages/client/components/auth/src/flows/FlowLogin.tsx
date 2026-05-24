@@ -1,4 +1,4 @@
-import { Match, Switch } from "solid-js";
+import { Match, Switch, createEffect } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
 
@@ -80,7 +80,10 @@ export default function FlowLogin() {
                 </a>
               </Column>
               <Row align justify>
-                <a href="..">
+                {/* STELLIS: href=".." doesn't navigate in solid-router — it
+                    looks for a literal ".." route, finds none, and silently
+                    no-ops. Absolute /login goes back to the buttons screen. */}
+                <a href="/login">
                   <Button variant="text">
                     <MdArrowBack {...iconSize("1.2em")} /> <Trans>Back</Trans>
                   </Button>
@@ -94,20 +97,68 @@ export default function FlowLogin() {
         }
       >
         <Match when={isLoggedIn()}>
-          <Navigate href={state.layout.popNextPath() ?? "/app"} />
+          {/*
+            STELLIS: hard reload instead of SPA <Navigate>. Stoat's post-login
+            transition from /login/auth → /app via SPA routing leaves Layout's
+            children un-hydrated until manual reload (user saw "только контур" —
+            blank card shell). Forcing a real navigation re-runs the full
+            bootstrap with the freshly cached session and the layout paints.
+          */}
+          {(() => {
+            const next = state.layout.popNextPath() ?? "/app";
+            queueMicrotask(() => window.location.replace(next));
+            return <CircularProgress />;
+          })()}
         </Match>
         <Match when={lifecycle.state() === State.LoggingIn}>
           <CircularProgress />
         </Match>
         <Match when={lifecycle.state() === State.Onboarding}>
+          {/*
+            STELLIS: previously users hit this screen after first login,
+            didn't realise the input was waiting for them, and hit Confirm
+            blindly → server validation error → "ничего не работает".
+            Fixes: explicit hint, auto-focus the field, native HTML
+            required+minlength prevents empty submit.
+            Auto-focus + attribute injection runs inside an effect that polls
+            the DOM (Stoat's Form/Fields wraps the actual <input> several
+            layers down — a ref on Form doesn't reach it).
+          */}
+          {(() => {
+            createEffect(() => {
+              if (lifecycle.state() !== State.Onboarding) return;
+              const tryFocus = () => {
+                const input = document.querySelector<HTMLInputElement>(
+                  'input[name="username"]',
+                );
+                if (input) {
+                  input.required = true;
+                  input.minLength = 2;
+                  input.maxLength = 32;
+                  input.pattern = "[A-Za-z0-9_]{2,32}";
+                  if (!input.placeholder) input.placeholder = "ваш_никнейм";
+                  input.focus();
+                  return true;
+                }
+                return false;
+              };
+              if (!tryFocus()) {
+                // Form rendering can be async (Fields component); retry once.
+                setTimeout(tryFocus, 50);
+              }
+            });
+            return null;
+          })()}
+
           <FlowTitle>
             <Trans>Choose a username</Trans>
           </FlowTitle>
 
           <Text>
             <Trans>
-              Pick a username that you want people to be able to find you by.
-              This can be changed later in your user settings.
+              Last registration step. Pick a username people will see —
+              latin letters, digits, underscore, at least 2 characters.
+              You can change it later in settings.
             </Trans>
           </Text>
 

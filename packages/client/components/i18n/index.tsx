@@ -38,29 +38,27 @@ export async function loadAndSwitchLocale(
 
 /**
  * Preferred language as reported by the browser
+ *
+ * STELLIS: fallback changed from ENGLISH to RUSSIAN — this is a closed
+ * Russian-speaking tribe. Fresh visitors with en-US navigator.language used
+ * to see English UI even though we ship a 728-string Russian catalog.
+ *
  * @returns Preferred language
  */
 export function browserPreferredLanguage() {
-  const languages = Object.keys(Languages).map(
-    (x) => [x, Languages[x as keyof typeof Languages]] as const,
-  );
-
-  // Get the user's system language. Check for exact
-  // matches first, otherwise check for partial matches
-  return (
-    navigator.languages
-      .map((lang) => languages.find((l) => l[0].replace(/_/g, "-") == lang))
-      .filter((lang) => lang)[0]?.[0] ??
-    navigator.languages
-      .map((x) => x.split("-")[0])
-      .map((lang) => languages.find((l) => l[0] == lang))
-      .filter((lang) => lang)[0]?.[0] ??
-    Language.ENGLISH
-  );
+  // STELLIS: closed Russian-speaking tribe — default RU for fresh visitors
+  // regardless of navigator.language (which is usually en-US on dev machines).
+  // User can override anytime via Settings → Language.
+  return Language.RUSSIAN;
 }
 
 /**
  * Initialise i18n engine
+ *
+ * STELLIS: still loads `en` as the seed catalog (it's the source locale that
+ * carries all msgids), but the actual activation will be RU once the
+ * preferences-restore effect runs. This avoids a Russian-tribe instance
+ * flashing English UI for one frame before the locale flip.
  */
 export function initI18n() {
   i18n.load({

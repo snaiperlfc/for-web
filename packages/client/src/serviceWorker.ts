@@ -3,6 +3,17 @@ import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
 
 declare let self: ServiceWorkerGlobalScope;
 
+// STELLIS: skipWaiting + clientsClaim → new SW activates immediately and
+// takes control of open windows. We DO NOT force-navigate clients here —
+// previous attempt at clients.navigate() caused interactive state loss
+// (buttons inert after iOS PWA woke up). Workbox's cleanupOutdatedCaches
+// handles old precache purge; the user gets new assets on their next
+// natural reload, and the update banner in main app prompts them when ready.
+self.skipWaiting();
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
 interface ChannelPartial {
   channel_type: string;
   name?: string;
@@ -89,3 +100,30 @@ precacheAndRoute(
     }
   }),
 );
+
+// STELLIS: offline fallback. If a navigation request fails (no network,
+// upstream completely dead) serve the standalone branded page instead of
+// the browser's default "no connection" screen. The HTML is precached
+// because it lives in /public so it's picked up by the manifest.
+self.addEventListener("fetch", (event) => {
+  if (event.request.mode !== "navigate") return;
+  event.respondWith(
+    (async () => {
+      try {
+        return await fetch(event.request);
+      } catch {
+        const cache = await caches.open("workbox-precache-v2-https://stellis.ru/");
+        const cached =
+          (await cache.match("/stellis-fallback.html")) ||
+          (await caches.match("/stellis-fallback.html"));
+        return (
+          cached ||
+          new Response(
+            "Offline — открой stellis.ru/stellis-fallback.html",
+            { status: 503, headers: { "content-type": "text/plain; charset=utf-8" } },
+          )
+        );
+      }
+    })(),
+  );
+});

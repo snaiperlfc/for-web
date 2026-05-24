@@ -8,7 +8,7 @@ import {
   useContext,
 } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
+import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { VirtualContainer } from "@minht11/solid-virtual-container";
 import { useQuery } from "@tanstack/solid-query";
 import { styled } from "styled-system/jsx";
@@ -33,6 +33,7 @@ type GifResult = {
 const FilterContext = createContext<(value: string) => void>();
 
 export function GifPicker() {
+  const { t } = useLingui();
   const [filter, setFilter] = createSignal("");
 
   const fliterLowercase = () => filter().toLowerCase();
@@ -42,7 +43,7 @@ export function GifPicker() {
       <TextField
         autoFocus
         variant="filled"
-        placeholder="Search for GIFs..."
+        placeholder={t`Search for GIFs...`}
         value={filter()}
         onMouseDown={(e) => {
           e.preventDefault();

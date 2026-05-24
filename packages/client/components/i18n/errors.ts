@@ -78,6 +78,17 @@ export function useError() {
           return t`This message is empty and has not been sent.`;
         case "FailedValidation":
           return t`Something is wrong with your request, ${err.error}.`;
+        case "OperationFailed":
+          // STELLIS: Stoat upstream returns this for several scenarios but
+          // the most common at registration (POST /auth/account/create) is
+          // a duplicate email. We can't tell which case it is from the
+          // payload (Stoat doesn't include detail), so use the most likely
+          // explanation as a hint and direct the user to login.
+          return t`Email is already registered. Try logging in instead.`;
+        case "InvalidInvite":
+          return t`Invite is invalid or has already been used.`;
+        case "MissingInvite":
+          return t`This server is invite-only. Ask a member to send you an invite link.`;
         case "FeatureDisabled":
           return t`This feature is currently disabled.`;
         case "FileTypeNotAllowed":

@@ -141,7 +141,7 @@ export const HomeSidebar = (props: Props) => {
           </Switch>
 
           <Category>
-            Direct Messages
+            <Trans>Direct Messages</Trans>
             <a
               class={css({
                 cursor: "pointer",

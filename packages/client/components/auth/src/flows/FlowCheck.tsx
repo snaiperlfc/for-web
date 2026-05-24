@@ -42,7 +42,8 @@ export default function FlowCheck() {
         <Trans>Check your mail!</Trans>
       </FlowTitle>
       <Row align justify>
-        <a href="..">
+        {/* STELLIS: absolute path — relative ".." doesn't navigate in solid-router. */}
+        <a href="/login">
           <Button variant="text">
             <MdArrowBack {...iconSize("1.2em")} /> <Trans>Back</Trans>
           </Button>

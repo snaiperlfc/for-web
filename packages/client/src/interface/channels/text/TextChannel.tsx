@@ -298,15 +298,29 @@ const Content = styled("div", {
 
 /**
  * Base styles
+ *
+ * STELLIS mobile: the right-side member/pins/search sidebar is rendered as
+ * a sibling pane inside the channel content row. On a 390px-wide phone, the
+ * 248px default eats most of the screen and squashes the chat. Override to
+ * a fixed full-width overlay below 768px (z-index above content + tap on
+ * channel header member icon dismisses normally).
  */
 const sidebar = cva({
   base: {
     flexShrink: 0,
     width: "var(--layout-width-channel-sidebar)",
-    // margin: "var(--gap-md)",
     borderRadius: "var(--borderRadius-lg)",
-    // color: "var(--colours-sidebar-channels-foreground)",
-    // background: "var(--colours-sidebar-channels-background)",
+    "@media (max-width: 767px)": {
+      position: "fixed",
+      top: 0,
+      right: 0,
+      bottom: 0,
+      width: "100vw !important",
+      maxWidth: "100vw",
+      zIndex: 20,
+      background: "var(--md-sys-color-surface-container)",
+      borderRadius: 0,
+    },
   },
 });
 

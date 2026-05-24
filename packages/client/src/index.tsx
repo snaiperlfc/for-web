@@ -187,3 +187,20 @@ render(
   ),
   document.getElementById("root") as HTMLElement,
 );
+
+// STELLIS: remove the pre-mount boot screen now that SPA is mounted.
+// Belt-and-braces:
+//   1. body.spa-mounted → CSS `display:none` on #boot-screen (kills it even
+//      if the JS removal path errors out)
+//   2. opacity fade + element removal (clean DOM)
+{
+  document.body.classList.add("spa-mounted");
+  const boot = document.getElementById("boot-screen");
+  if (boot) {
+    requestAnimationFrame(() => {
+      boot.style.transition = "opacity 240ms ease-out";
+      boot.style.opacity = "0";
+      setTimeout(() => boot.remove(), 260);
+    });
+  }
+}

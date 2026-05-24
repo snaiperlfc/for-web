@@ -3,7 +3,10 @@ import { createFormControl, createFormGroup } from "solid-forms";
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
 
 import { useNavigate } from "@revolt/routing";
-import { Column, Dialog, DialogProps, Form2, Radio2 } from "@revolt/ui";
+import { Column, Dialog, DialogProps, Form2 } from "@revolt/ui";
+
+import MdChatBubble from "@material-design-icons/svg/outlined/chat_bubble.svg?component-solid";
+import MdHeadset from "@material-design-icons/svg/outlined/headset_mic.svg?component-solid";
 
 import { useModals } from "..";
 import { Modals } from "../types";
@@ -73,14 +76,35 @@ export function CreateChannelModal(
             label={t`Channel Name`}
           />
 
-          <Form2.Radio control={group.controls.type}>
-            <Radio2.Option value="Text">
-              <Trans>Text Channel</Trans>
-            </Radio2.Option>
-            <Radio2.Option value="Voice">
-              <Trans>Voice Channel</Trans>
-            </Radio2.Option>
-          </Form2.Radio>
+          {/*
+           * STELLIS: replaced Form2.Radio (which wraps mdui-radio-group web
+           * component) with Form2.ButtonGroup. The MDUI radio-group's `change`
+           * event didn't propagate through Solid's onChange, so the selection
+           * never made it back to the form control — every channel was
+           * created as "Text" regardless of which radio the user clicked.
+           * ButtonGroup uses native onPress + button state, which is reliable.
+           */}
+          <Form2.ButtonGroup
+            control={group.controls.type}
+            buttonDefinitions={[
+              {
+                value: "Text",
+                children: (
+                  <>
+                    <MdChatBubble /> <Trans>Text Channel</Trans>
+                  </>
+                ),
+              },
+              {
+                value: "Voice",
+                children: (
+                  <>
+                    <MdHeadset /> <Trans>Voice Channel</Trans>
+                  </>
+                ),
+              },
+            ]}
+          />
         </Column>
       </form>
     </Dialog>

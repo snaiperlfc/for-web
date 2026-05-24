@@ -5,7 +5,7 @@ import { Channel, Server, User } from "stoat.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
-import { useClient } from "@revolt/client";
+import { useClient, useClientLifecycle } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";
 import { KeybindAction, createKeybind } from "@revolt/keybinds";
 import { useModals } from "@revolt/modal";
@@ -16,6 +16,7 @@ import { Avatar, Column, Text, Time, Unreads, UserStatus } from "@revolt/ui";
 import MdAdd from "@material-design-icons/svg/filled/add.svg?component-solid";
 import MdExplore from "@material-design-icons/svg/filled/explore.svg?component-solid";
 import MdHome from "@material-design-icons/svg/filled/home.svg?component-solid";
+import MdLogout from "@material-design-icons/svg/filled/logout.svg?component-solid";
 import MdSettings from "@material-design-icons/svg/filled/settings.svg?component-solid";
 
 import { Tooltip } from "../../../../components/ui/components/floating";
@@ -69,6 +70,7 @@ export const ServerList = (props: Props) => {
   const client = useClient();
   const navigate = useNavigate();
   const { openModal } = useModals();
+  const { logout } = useClientLifecycle();
 
   const navigateServer = (byOffset: number) => {
     const serverId = props.selectedServer();
@@ -315,6 +317,56 @@ export const ServerList = (props: Props) => {
           onClick={() => openModal({ type: "settings", config: "user" })}
         >
           <Avatar size={42} fallback={<MdSettings />} interactive />
+        </a>
+      </Tooltip>
+      {/*
+        STELLIS: explicit Logout entry next to Settings. Previously the only
+        way to log out was Settings → My Account → Log Out (3 taps, buried).
+        Mobile users couldn't find it. Visible at all viewports.
+      */}
+      <Tooltip placement="right" content="Выйти">
+        <a
+          class={entryContainer()}
+          onClick={async () => {
+            if (!window.confirm("Выйти из Stellis на этом устройстве?")) return;
+
+            // STELLIS: real cleanup, not just transition.
+            //   1. controller.logout() — fires resetNotifications +
+            //      killServiceWorkerSubscription + auth.removeSession +
+            //      the Logout transition (in that order).
+            //   2. Belt-and-braces: nuke IndexedDB + localStorage explicitly
+            //      because the security-sensitive failure mode is "click
+            //      Logout, reload, end up logged in". If anything in step 1
+            //      didn't fully persist before reload, this guarantees it.
+            //   3. Hard-reload to /login.
+            try {
+              logout();
+            } catch {
+              /* noop — proceed to manual cleanup regardless */
+            }
+            try {
+              localStorage.clear();
+              sessionStorage.clear();
+            } catch {
+              /* noop */
+            }
+            try {
+              const dbs = await indexedDB.databases?.();
+              if (dbs) {
+                await Promise.all(
+                  dbs.map((db) => db.name && indexedDB.deleteDatabase(db.name)),
+                );
+              } else {
+                // Safari < 14 fallback
+                indexedDB.deleteDatabase("localforage");
+              }
+            } catch {
+              /* noop */
+            }
+            window.location.replace("/login");
+          }}
+        >
+          <Avatar size={42} fallback={<MdLogout />} interactive />
         </a>
       </Tooltip>
     </ServerListBase>

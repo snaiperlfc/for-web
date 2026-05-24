@@ -14,9 +14,49 @@
       href="./public/assets/web/icon.ico"
     />
     <title>Stellis</title>
+    <style>
+      /* STELLIS: pre-mount loader so first hit (cold JS parse ~3s on mobile)
+         doesn't show a black screen. SPA wipes #root content when it mounts,
+         so #boot-screen vanishes automatically. */
+      html, body { margin: 0; background: #11141C; color: #F4F1E8; }
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif; }
+      #boot-screen {
+        position: fixed; inset: 0;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 20px;
+        /* z-index: -1 keeps boot strictly behind SPA stacking context — even
+           if a SPA card has translucent background, boot can't bleed through. */
+        z-index: -1;
+        background: radial-gradient(circle at 50% 40%, #1A1F2E 0%, #11141C 60%, #07090E 100%);
+      }
+      /* Once SPA bootstraps it sets body.spa-mounted — kill boot via CSS as a
+         belt-and-braces backup even if JS removal path is interrupted. */
+      body.spa-mounted #boot-screen { display: none !important; }
+      #boot-screen .mark {
+        font-size: 40px; font-weight: 700; letter-spacing: -2px;
+        color: #F4F1E8;
+        display: flex; align-items: center; gap: 4px;
+      }
+      #boot-screen .mark .star {
+        color: #E5A857; font-size: 22px; margin-bottom: 12px;
+        animation: stellisTwinkle 2s ease-in-out infinite;
+      }
+      #boot-screen .hint {
+        font-size: 13px; color: #A8A399; letter-spacing: 4px; text-transform: uppercase;
+      }
+      @keyframes stellisTwinkle {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.15); }
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="boot-screen">
+      <div class="mark">stell<span class="star">✦</span>s</div>
+      <div class="hint">загружается…</div>
+    </div>
     <div id="root"></div>
     <div id="floating"></div>
 
