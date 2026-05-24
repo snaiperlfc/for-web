@@ -1,7 +1,6 @@
 import { Match, Show, Switch } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import { useNavigate } from "@solidjs/router";
 import { useMutation } from "@tanstack/solid-query";
 import { ServerPublicInvite } from "stoat.js";
 
@@ -14,13 +13,20 @@ import { Modals } from "../types";
  * Modal to join a server
  */
 export function InviteModal(props: DialogProps & Modals & { type: "invite" }) {
-  const navigate = useNavigate();
   const { showError } = useModals();
 
   const join = useMutation(() => ({
     mutationFn: () => (props.invite as ServerPublicInvite).join(),
+    /*
+     * STELLIS: hard navigate instead of SPA navigate. After joining a server
+     * via invite, the server is in the client's reactive collection but the
+     * primary sidebar wouldn't paint it until the user manually refreshed —
+     * same SPA-mount-stale issue we hit on login/logout. window.location
+     * .assign restarts the SPA boot path so the joined server appears in
+     * the list immediately and the channel view loads cleanly.
+     */
     onSuccess(server) {
-      navigate(server.path);
+      window.location.assign(server.path);
     },
     onError: showError,
   }));
