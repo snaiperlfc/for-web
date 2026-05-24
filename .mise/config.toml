@@ -1,3 +1,5 @@
+min_version = "2026.5.15"
+
 [tools]
 deno = "2.8.0"
 node = "26.2.0"
