@@ -97,8 +97,8 @@ msgstr "{0} joined"
 msgid "{0} left"
 msgstr "{0} left"
 
-#. placeholder {0}: (message.systemMessage as ChannelOwnershipChangeSystemMessage).from?.username
-#. placeholder {1}: (message.systemMessage as ChannelOwnershipChangeSystemMessage).to?.username
+#. placeholder {0}: (message.systemMessage as ChannelOwnershipChangeSystemMessage).from ?.username
+#. placeholder {1}: (message.systemMessage as ChannelOwnershipChangeSystemMessage).to ?.username
 #: components/client/NotificationsWorker.tsx
 msgid "{0} made {1} the new group owner"
 msgstr "{0} made {1} the new group owner"
@@ -721,6 +721,11 @@ msgstr "Close conversation with {0}?"
 msgid "Code"
 msgstr "Code"
 
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
+msgid "Coming soon! 👀"
+msgstr "Coming soon! 👀"
+
 #: components/app/interface/settings/user/Account.tsx
 msgid "Configure a way to get back into your account in case your 2FA is lost"
 msgstr "Configure a way to get back into your account in case your 2FA is lost"
@@ -1003,6 +1008,10 @@ msgstr "Default"
 msgid "Default Permissions"
 msgstr "Default Permissions"
 
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
+msgid "Defean"
+msgstr "Defean"
+
 #: components/modal/modals/EmojiPreview.tsx
 #: components/modal/modals/DeleteServer.tsx
 #: components/modal/modals/DeleteRole.tsx
@@ -1254,9 +1263,17 @@ msgstr "Enable authenticator app"
 msgid "Enable Desktop Notifications"
 msgstr "Enable Desktop Notifications"
 
+#: components/app/interface/settings/user/Notifications.tsx
+msgid "Enable Push Notifications"
+msgstr "Enable Push Notifications"
+
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
 msgid "Enable transparency glass/blur effects (slow on older machines)"
 msgstr "Enable transparency glass/blur effects (slow on older machines)"
+
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
+msgid "End call"
+msgstr "End call"
 
 #: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
 msgid "Enhanced"
@@ -1312,6 +1329,14 @@ msgstr "Extortion or blackmail"
 #: components/modal/modals/ReportContent.tsx
 msgid "Extreme violence, gore or animal cruelty"
 msgstr "Extreme violence, gore or animal cruelty"
+
+#: components/client/NotificationsController.ts
+msgid "Failed to enable notifications. Stoat does not have notification permission."
+msgstr "Failed to enable notifications. Stoat does not have notification permission."
+
+#: components/client/NotificationsController.ts
+msgid "Failed to enable push notifications. Please try again later."
+msgstr "Failed to enable push notifications. Please try again later."
 
 #: components/i18n/errors.ts
 msgid "Failed to process the image you provided."
@@ -1593,6 +1618,7 @@ msgstr "Join a server"
 msgid "Join the Stoat Lounge"
 msgstr "Join the Stoat Lounge"
 
+#: src/interface/channels/ChannelHeader.tsx
 #: components/ui/components/features/voice/callCard/VoiceCallCardPreview.tsx
 msgid "Join the voice channel"
 msgstr "Join the voice channel"
@@ -1687,6 +1713,7 @@ msgstr "Let us know how we can improve our app by giving us feedback."
 msgid "Light"
 msgstr "Light"
 
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Listen"
 msgstr "Listen"
@@ -1892,6 +1919,7 @@ msgstr "Move members between voice channels"
 msgid "Multi-factor authentication is already enabled for this account."
 msgstr "Multi-factor authentication is already enabled for this account."
 
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
 #: components/app/menus/UserContextMenu.tsx
 msgid "Mute"
 msgstr "Mute"
@@ -1998,6 +2026,7 @@ msgstr "Not of minimum age to use the platform"
 
 #: components/app/menus/ServerContextMenu.tsx
 #: components/app/menus/shared/NotificationContextMenu.tsx
+#: components/app/interface/settings/UserSettings.tsx
 msgid "Notifications"
 msgstr "Notifications"
 
@@ -2230,6 +2259,14 @@ msgstr "Reason for report"
 msgid "Receive notifications while the app is open and in the background."
 msgstr "Receive notifications while the app is open and in the background."
 
+#: components/app/interface/settings/user/Notifications.tsx
+msgid "Receive notifications while the tab is open."
+msgstr "Receive notifications while the tab is open."
+
+#: components/app/interface/settings/user/Notifications.tsx
+msgid "Receive push notifications while the app is closed."
+msgstr "Receive push notifications while the app is closed."
+
 #: components/ui/components/features/voice/callCard/VoiceCallCardStatus.tsx
 msgid "Reconnecting"
 msgstr "Reconnecting"
@@ -2384,6 +2421,10 @@ msgstr "Responsibly disclosed security issues"
 #: components/app/menus/DraftMessageContextMenu.tsx
 msgid "Retry sending"
 msgstr "Retry sending"
+
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
+msgid "Return to voice channel"
+msgstr "Return to voice channel"
 
 #: components/modal/modals/ReportContent.tsx
 msgid "Revenge or underage pornography"
@@ -2599,6 +2640,10 @@ msgstr "Several people are typing…"
 msgid "Share camera or screen in voice call"
 msgstr "Share camera or screen in voice call"
 
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
+msgid "Share screen"
+msgstr "Share screen"
+
 #: components/app/interface/settings/user/Native.tsx
 msgid "Show corrections and suggestions as you type."
 msgstr "Show corrections and suggestions as you type."
@@ -2664,6 +2709,10 @@ msgstr "Speak"
 msgid "Spellchecker"
 msgstr "Spellchecker"
 
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
+msgid "Start camera"
+msgstr "Start camera"
+
 #: components/app/interface/settings/user/Native.tsx
 msgid "Start Minimised to Tray"
 msgstr "Start Minimised to Tray"
@@ -2703,6 +2752,14 @@ msgstr "Stoat is one of the best ways to stay connected with your friends and co
 #: components/app/interface/settings/user/Native.tsx
 msgid "Stoat will start in the system tray."
 msgstr "Stoat will start in the system tray."
+
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
+msgid "Stop camera"
+msgstr "Stop camera"
+
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
+msgid "Stop sharing"
+msgstr "Stop sharing"
 
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "Submit feature suggestion"
@@ -2930,6 +2987,10 @@ msgstr "Unmark as Mature"
 #: components/modal/modals/ChannelToggleMature.tsx
 msgid "Unmark this channel as mature?"
 msgstr "Unmark this channel as mature?"
+
+#: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
+msgid "Unmute"
+msgstr "Unmute"
 
 #: components/app/menus/shared/NotificationContextMenu.tsx
 msgid "Unmute Channel"
