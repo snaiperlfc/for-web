@@ -1,7 +1,5 @@
-import { BiLogosGithub } from "solid-icons/bi";
-import { JSX } from "solid-js";
+import { JSX, Suspense, lazy } from "solid-js";
 
-import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { Titlebar } from "@revolt/app/interface/desktop/Titlebar";
@@ -10,15 +8,23 @@ import { IconButton, iconSize } from "@revolt/ui";
 
 import MdDarkMode from "@material-design-icons/svg/filled/dark_mode.svg?component-solid";
 
-import background from "./background.jpg";
 import { FlowBase } from "./flows/Flow";
-import bluesky from "./flows/bluesky.svg";
+
+// STELLIS: 3D background is ~150KB three.js — lazy-load so the auth form
+// paints immediately and the scene fades in once WebGL is ready.
+const AuthBackground3D = lazy(() => import("./AuthBackground3D"));
 
 /**
  * Authentication page layout
+ *
+ * STELLIS: 3D canvas sits at `position: absolute; inset: 0; z-index: 0`
+ * behind everything else. Nav + form get `position: relative; z-index: 1`
+ * so they always sit on top of the canvas.
  */
 const Base = styled("div", {
   base: {
+    position: "relative",
+    isolation: "isolate",
     width: "100%",
     height: "100%",
     padding: "40px 35px",
@@ -27,11 +33,8 @@ const Base = styled("div", {
     overflowY: "scroll",
 
     color: "var(--md-sys-color-on-surface)",
-    background: "var(--md-sys-color-surface)",
-    // background: `var(--url)`,
-    // backgroundPosition: "center",
-    // backgroundRepeat: "no-repeat",
-    // backgroundSize: "cover",
+    background:
+      "radial-gradient(circle at 50% 40%, #1A1F2E 0%, #11141C 60%, #07090E 100%)",
 
     display: "flex",
     flexDirection: "column",
@@ -59,60 +62,6 @@ const Nav = styled("div", {
 });
 
 /**
- * Navigation items
- */
-const NavItems = styled("div", {
-  base: {
-    gap: "10px",
-    display: "flex",
-    alignItems: "center",
-
-    fontSize: "0.9em",
-  },
-  variants: {
-    variant: {
-      default: {},
-      stack: {
-        md: {
-          flexDirection: "column",
-        },
-      },
-      hide: {
-        md: {
-          display: "none",
-        },
-      },
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
-});
-
-/**
- * Link with an icon inside
- */
-const LinkWithIcon = styled("a", {
-  base: { height: "24px" },
-});
-
-/**
- * Middot-like bullet
- */
-const Bullet = styled("div", {
-  base: {
-    height: "5px",
-    width: "5px",
-    background: "grey",
-    borderRadius: "50%",
-
-    md: {
-      display: "none",
-    },
-  },
-});
-
-/**
  * Authentication page
  */
 export function AuthPage(props: { children: JSX.Element }) {
@@ -127,11 +76,11 @@ export function AuthPage(props: { children: JSX.Element }) {
       }}
     >
       <Titlebar />
-      <Base
-        style={{ "--url": `url('${background}')` }}
-        css={{ scrollbar: "hidden" }}
-      >
-        <Nav>
+      <Base css={{ scrollbar: "hidden" }}>
+        <Suspense fallback={null}>
+          <AuthBackground3D />
+        </Suspense>
+        <Nav style={{ position: "relative", "z-index": 1 }}>
           <div />
           <IconButton
             variant="tonal"
@@ -144,17 +93,11 @@ export function AuthPage(props: { children: JSX.Element }) {
             <MdDarkMode {...iconSize("24px")} />
           </IconButton>
         </Nav>
-        <FlowBase>{props.children}</FlowBase>
-        <Nav>
-          {/* STELLIS: closed instance — Stoat community nav (Github, Bluesky, About, Terms, Privacy) убран */}
-          <NavItems variant="hide">
-            <Trans>Image by {"@fakurian"}</Trans>
-            <Bullet />
-            <a href="https://unsplash.com/" target="_blank" rel="noreferrer">
-              unsplash.com
-            </a>
-          </NavItems>
-        </Nav>
+        <div style={{ position: "relative", "z-index": 1 }}>
+          <FlowBase>{props.children}</FlowBase>
+        </div>
+        {/* STELLIS: closed instance — Stoat community nav + unsplash credit убраны */}
+        <div style={{ height: "32px" }} />
       </Base>
     </div>
   );

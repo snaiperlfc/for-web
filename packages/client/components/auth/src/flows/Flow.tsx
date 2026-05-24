@@ -17,7 +17,18 @@ export const FlowBase = styled("div", {
     flexDirection: "column",
     gap: "var(--gap-lg)",
     flexGrow: 0,
-    background: "var(--md-sys-color-surface-container)",
+    // STELLIS: glassmorphism over the 3D background — translucent surface +
+    // backdrop blur keeps the card readable while letting the gold star and
+    // particle field stay visible behind it. Subtle gold border + glow gives
+    // the auth card the same "constellation" feel as the landing page.
+    background:
+      "color-mix(in oklab, var(--md-sys-color-surface-container) 78%, transparent)",
+    backdropFilter: "blur(22px) saturate(140%)",
+    WebkitBackdropFilter: "blur(22px) saturate(140%)",
+    border:
+      "1px solid color-mix(in oklab, #E5A857 18%, transparent)",
+    boxShadow:
+      "0 20px 60px rgba(0, 0, 0, 0.45), 0 0 80px color-mix(in oklab, #E5A857 8%, transparent)",
     color: "var(--md-sys-color-on-surface)",
     width: "360px",
     maxWidth: "360px",

@@ -36,8 +36,8 @@ export default defineConfig({
       manifest: {
         name: "Stellis",
         short_name: "Stellis",
-        description: "Голоса между своими.",
-        categories: ["communication", "chat", "messaging"],
+        description: "Личное небо. По приглашениям.",
+        categories: ["productivity", "personalization"],
         start_url: base,
         orientation: "portrait",
         display_override: ["window-controls-overlay"],
