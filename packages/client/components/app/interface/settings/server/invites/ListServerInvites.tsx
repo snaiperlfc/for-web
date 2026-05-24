@@ -35,9 +35,13 @@ export function ListServerInvites(props: { server: Server }) {
   async function deleteInvite(invite: ServerInvite) {
     try {
       await invite.delete();
+      // STELLIS / upstream fix: was `entry.id !== entry.id` (always false) so
+      // the filter wiped every row from the UI cache. The actual API delete
+      // succeeded, which is why a refresh would bring the rest back. Compare
+      // against the invite being deleted instead.
       client.setQueryData(
         ["invites", props.server.id],
-        query.data!.filter((entry) => entry.id !== entry.id),
+        query.data!.filter((entry) => entry.id !== invite.id),
       );
     } catch (error) {
       showError(error);
