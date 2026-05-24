@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.8.0](https://github.com/stoatchat/for-web/compare/stoat-for-web-v0.7.0...stoat-for-web-v0.8.0) (2026-05-24)
+
+
+### Features
+
+* Add push notifications to the service worker of the PWA ([#882](https://github.com/stoatchat/for-web/issues/882)) ([d5abc61](https://github.com/stoatchat/for-web/commit/d5abc61575b5b23a492fae2d323de5a734e6e2f0))
+* add role icons to member sidebar ([#1194](https://github.com/stoatchat/for-web/issues/1194)) ([2f0c50a](https://github.com/stoatchat/for-web/commit/2f0c50af7dee26bb2e2ead39f51633ac184f3123))
+* Device resize hooks (prep for Mobile/Tablet UI) ([#1196](https://github.com/stoatchat/for-web/issues/1196)) ([ffc1e4e](https://github.com/stoatchat/for-web/commit/ffc1e4eec9a3551fc535455343b3ef0d96374ea7))
+* Voice Call Button in header ([#1025](https://github.com/stoatchat/for-web/issues/1025)) ([5c91d55](https://github.com/stoatchat/for-web/commit/5c91d550a64e0b717de155becf28f265e987f73c))
+
+
+### Bug Fixes
+
+* Config fixes for TSConfig root dir & VSCode search ignores ([#1195](https://github.com/stoatchat/for-web/issues/1195)) ([fbd65f5](https://github.com/stoatchat/for-web/commit/fbd65f566d94f1234ee8cdc0350aa64e71b2e8d9))
+* Off-center loading progress wheel is now nice n centered ([#1200](https://github.com/stoatchat/for-web/issues/1200)) ([e76cb3b](https://github.com/stoatchat/for-web/commit/e76cb3baf8a4c0a0ba47ca81a7ea5e3d9b8a91c6))
+* **profile:** avatar toggle closes status menu properly ([#1126](https://github.com/stoatchat/for-web/issues/1126)) ([09e6d16](https://github.com/stoatchat/for-web/commit/09e6d16f700488c245a4edfb4344e486b41b94de))
+* role icons not removing when pressing save ([#1192](https://github.com/stoatchat/for-web/issues/1192)) ([e36b909](https://github.com/stoatchat/for-web/commit/e36b9092fd50696a543f6293a2a5953ae8244805))
+* Use correct formatter, remove bad line from tsconfig.json ([829edf2](https://github.com/stoatchat/for-web/commit/829edf29558c4b6f24195df75a9d2b454616935b))
+
 ## [0.7.0](https://github.com/stoatchat/for-web/compare/stoat-for-web-v0.6.0...stoat-for-web-v0.7.0) (2026-05-21)
 
 
