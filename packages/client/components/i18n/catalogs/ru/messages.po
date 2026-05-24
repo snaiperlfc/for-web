@@ -1535,10 +1535,6 @@ msgstr "Неактивен"
 msgid "Illegal hacking or cracking"
 msgstr "Незаконный взлом или крекинг"
 
-#: components/auth/src/AuthPage.tsx
-msgid "Image by @fakurian"
-msgstr "Изображение @fakurian"
-
 #: components/modal/modals/ReportContent.tsx
 msgid "Impersonation"
 msgstr "Выдача себя за другое лицо"

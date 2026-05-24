@@ -1535,10 +1535,6 @@ msgstr "Nečinný"
 msgid "Illegal hacking or cracking"
 msgstr ""
 
-#: components/auth/src/AuthPage.tsx
-msgid "Image by @fakurian"
-msgstr ""
-
 #: components/modal/modals/ReportContent.tsx
 msgid "Impersonation"
 msgstr ""

@@ -1535,10 +1535,6 @@ msgstr "Idle"
 msgid "Illegal hacking or cracking"
 msgstr "Illegal hacking or cracking"
 
-#: components/auth/src/AuthPage.tsx
-msgid "Image by @fakurian"
-msgstr "Image by @fakurian"
-
 #: components/modal/modals/ReportContent.tsx
 msgid "Impersonation"
 msgstr "Impersonation"
