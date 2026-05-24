@@ -64,10 +64,14 @@ export const startsWithPackPUA = (emoji: string) => {
 };
 
 export function unicodeEmojiUrl(
-  pack: UnicodeEmojiPacks = "fluent-3d",
+  _pack: UnicodeEmojiPacks = "fluent-3d",
   text: string,
 ) {
-  return `https://static.stoat.chat/emoji/${pack}/${toCodepoint(text)}.svg?v=1`;
+  // STELLIS: static.stoat.chat CDN unreachable in РФ — fallback to inline SVG
+  // that renders native system emoji (Apple Color Emoji / Segoe UI Emoji / Noto Color Emoji)
+  void toCodepoint;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><text x="50%" y="55%" font-size="26" text-anchor="middle" dominant-baseline="central" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif">${text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</text></svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
 /**

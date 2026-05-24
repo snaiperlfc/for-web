@@ -198,21 +198,8 @@ function PickTimeFormat() {
 // }
 
 /**
- * Language contribution link
+ * STELLIS: Language contribution link disabled (closed instance, no public translation portal).
  */
 function ContributeLanguageLink() {
-  return (
-    <a href="https://weblate.insrt.uk/engage/revolt/" target="_blank">
-      <CategoryButton
-        action="external"
-        icon={<MdTranslate {...iconSize(22)} />}
-        onClick={() => void 0}
-        description={
-          <Trans>Help contribute to an existing or new language</Trans>
-        }
-      >
-        <Trans>Contribute a language</Trans>
-      </CategoryButton>
-    </a>
-  );
+  return null;
 }

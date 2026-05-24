@@ -1111,7 +1111,7 @@ msgstr "Discord RPC"
 
 #: src/interface/Home.tsx
 msgid "Discover Stoat"
-msgstr "Discover Stoat"
+msgstr "Discover Stellis"
 
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
 msgid "Display & Text"
@@ -1151,11 +1151,11 @@ msgstr "Donate"
 
 #: src/interface/Home.tsx
 msgid "Donate to Stoat"
-msgstr "Donate to Stoat"
+msgstr "Donate to Stellis"
 
 #: components/ui/components/features/profiles/ProfileBadges.tsx
 msgid "Donated to Stoat"
-msgstr "Donated to Stoat"
+msgstr "Donated to Stellis"
 
 #: components/modal/modals/MFARecovery.tsx
 msgid "Done"
@@ -1401,7 +1401,7 @@ msgstr "Get active recovery codes"
 
 #: src/interface/Home.tsx
 msgid "Give feedback on Stoat"
-msgstr "Give feedback on Stoat"
+msgstr "Give feedback on Stellis"
 
 #: components/modal/modals/ReportContent.tsx
 msgid "Give us some detail"
@@ -1427,7 +1427,7 @@ msgstr "Go to account settings to edit your username"
 #: src/interface/Home.tsx
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "Go to the Stoat Lounge"
-msgstr "Go to the Stoat Lounge"
+msgstr "Go to the Stellis Lounge"
 
 #: src/interface/Home.tsx
 #: src/interface/Home.tsx
@@ -1471,7 +1471,7 @@ msgstr "Help contribute to an existing or new language"
 
 #: components/ui/components/features/profiles/ProfileBadges.tsx
 msgid "Helped translate Stoat"
-msgstr "Helped translate Stoat"
+msgstr "Helped translate Stellis"
 
 #. placeholder {0}: link()
 #: components/modal/modals/CreateInvite.tsx
@@ -1524,7 +1524,7 @@ msgstr "Impersonation"
 
 #: components/app/interface/settings/user/Native.tsx
 msgid "Instead of closing, Stoat will hide in your tray."
-msgstr "Instead of closing, Stoat will hide in your tray."
+msgstr "Instead of closing, Stellis will hide in your tray."
 
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
 msgid "Interface Font"
@@ -1591,7 +1591,7 @@ msgstr "Join a server"
 #: src/interface/Home.tsx
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "Join the Stoat Lounge"
-msgstr "Join the Stoat Lounge"
+msgstr "Join the Stellis Lounge"
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardPreview.tsx
 msgid "Join the voice channel"
@@ -1649,11 +1649,11 @@ msgstr "Latest"
 
 #: components/app/interface/settings/user/Native.tsx
 msgid "Launch Stoat when you log into your computer."
-msgstr "Launch Stoat when you log into your computer."
+msgstr "Launch Stellis when you log into your computer."
 
 #: components/app/interface/settings/user/bots/MyBots.tsx
 msgid "Learn more about how to create bots on Stoat."
-msgstr "Learn more about how to create bots on Stoat."
+msgstr "Learn more about how to create bots on Stellis."
 
 #: components/modal/modals/LeaveServer.tsx
 #: components/modal/modals/DeleteChannel.tsx
@@ -1677,7 +1677,7 @@ msgstr "Leave server"
 
 #: components/app/interface/settings/user/Native.tsx
 msgid "Let Stoat use its own custom titlebar."
-msgstr "Let Stoat use its own custom titlebar."
+msgstr "Let Stellis use its own custom titlebar."
 
 #: src/interface/Home.tsx
 msgid "Let us know how we can improve our app by giving us feedback."
@@ -1964,7 +1964,7 @@ msgstr "New Password"
 
 #: components/app/interface/channels/text/Message.tsx
 msgid "New to Stoat"
-msgstr "New to Stoat"
+msgstr "New to Stellis"
 
 #: components/app/interface/channels/text/Message.tsx
 msgid "New to the server"
@@ -2314,7 +2314,7 @@ msgstr "Rename Session"
 
 #: components/app/interface/settings/user/Native.tsx
 msgid "Rep Stoat using Discord rich presence."
-msgstr "Rep Stoat using Discord rich presence."
+msgstr "Rep Stellis using Discord rich presence."
 
 #: components/app/menus/MessageContextMenu.tsx
 msgid "Reply"
@@ -2613,7 +2613,7 @@ msgstr "Show send message button"
 
 #: components/auth/src/flows/FlowLogin.tsx
 msgid "Sign into Stoat"
-msgstr "Sign into Stoat"
+msgstr "Sign into Stellis"
 
 #: components/auth/src/flows/FlowHome.tsx
 msgid "Sign Up"
@@ -2686,23 +2686,23 @@ msgstr "Status"
 
 #: components/ui/components/features/profiles/ProfileBadges.tsx
 msgid "Stoat Developer"
-msgstr "Stoat Developer"
+msgstr "Stellis Developer"
 
 #: components/app/interface/settings/user/Native.tsx
 msgid "Stoat for Desktop"
-msgstr "Stoat for Desktop"
+msgstr "Stellis for Desktop"
 
 #: components/ui/components/features/profiles/ProfileBadges.tsx
 msgid "Stoat Founder"
-msgstr "Stoat Founder"
+msgstr "Stellis Founder"
 
 #: components/auth/src/flows/FlowHome.tsx
 msgid "Stoat is one of the best ways to stay connected with your friends and community, anywhere, anytime."
-msgstr "Stoat is one of the best ways to stay connected with your friends and community, anywhere, anytime."
+msgstr "Stellis is one of the best ways to stay connected with your friends and community, anywhere, anytime."
 
 #: components/app/interface/settings/user/Native.tsx
 msgid "Stoat will start in the system tray."
-msgstr "Stoat will start in the system tray."
+msgstr "Stellis will start in the system tray."
 
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "Submit feature suggestion"
@@ -2722,7 +2722,7 @@ msgstr "Subscriptions"
 
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "Suggest new Stoat features on GitHub discussions."
-msgstr "Suggest new Stoat features on GitHub discussions."
+msgstr "Suggest new Stellis features on GitHub discussions."
 
 #: src/interface/Home.tsx
 msgid "Support the project by donating - thank you!"
@@ -2913,7 +2913,7 @@ msgstr "Unblock user"
 #. placeholder {0}: err.type
 #: components/i18n/errors.ts
 msgid "Uncaught Stoat error: {0}"
-msgstr "Uncaught Stoat error: {0}"
+msgstr "Uncaught Stellis error: {0}"
 
 #: components/markdown/plugins/anchors.tsx
 msgid "Unknown Server"
@@ -3310,7 +3310,7 @@ msgstr "You've been invited to join this server.<0/>Would you like to join?"
 
 #: components/modal/modals/SignedOut.tsx
 msgid "You've been signed out of Stoat!"
-msgstr "You've been signed out of Stoat!"
+msgstr "You've been signed out of Stellis!"
 
 #: components/i18n/errors.ts
 msgid "You've reached your personal bot limit."

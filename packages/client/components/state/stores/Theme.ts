@@ -116,18 +116,24 @@ export class Theme extends AbstractStore {
 
   /**
    * Generate default values
+   *
+   * STELLIS defaults:
+   * - Dark mode by default (бренд тёмный)
+   * - Warm gold accent #E5A857 (oklch 78% 0.16 80) — звёздное золото
+   * - Vibrant variant — выраженный colour-shift из gold seed
+   * - JetBrains Mono для технических блоков
    */
   default(): TypeTheme {
     return {
       preset: "you",
-      mode: "system",
+      mode: "dark",
 
-      m3Accent: "#5470ec",
+      m3Accent: "#E5A857",
       m3Contrast: 0.0,
-      m3Variant: "tonal_spot",
+      m3Variant: "vibrant",
 
       interfaceFont: "Inter",
-      monospaceFont: "Fira Code",
+      monospaceFont: "JetBrains Mono",
 
       blur: true,
       messageSize: 14,

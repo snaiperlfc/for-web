@@ -109,14 +109,17 @@ export function HomePage() {
         <Trans>Home</Trans>
       </Header>
       <div use:scrollable={{ class: content() }}>
-        <Column>
-          <Wordmark
-            class={css({
-              width: "160px",
-              fill: "var(--md-sys-color-on-surface)",
-            })}
-          />
-        </Column>
+        <Wordmark
+          class={css({
+            display: "block",
+            width: "320px",
+            maxWidth: "70%",
+            height: "auto",
+            margin: "0 auto",
+            color: "var(--md-sys-color-on-surface)",
+            fill: "var(--md-sys-color-on-surface)",
+          })}
+        />
         <Buttons>
           <SeparatedColumn>
             <CategoryButton
@@ -136,85 +139,10 @@ export function HomePage() {
             >
               <Trans>Create a group or server</Trans>
             </CategoryButton>
-            <Switch fallback={null}>
-              <Match when={showLoungeButton && isInLounge}>
-                <CategoryButton
-                  onClick={() => navigate("/server/01F7ZSBSFHQ8TA81725KQCSDDP")}
-                  description={
-                    <Trans>
-                      You can report issues and discuss improvements with us
-                      directly here.
-                    </Trans>
-                  }
-                  icon={<MdGroups3 />}
-                >
-                  <Trans>Go to the Stoat Lounge</Trans>
-                </CategoryButton>
-              </Match>
-              <Match when={showLoungeButton && !isInLounge}>
-                <CategoryButton
-                  onClick={() => {
-                    client()
-                      .api.get("/invites/Testers")
-                      .then((invite) =>
-                        PublicChannelInvite.from(client(), invite),
-                      )
-                      .then((invite) => openModal({ type: "invite", invite }));
-                  }}
-                  description={
-                    <Trans>
-                      You can report issues and discuss improvements with us
-                      directly here.
-                    </Trans>
-                  }
-                  icon={<MdGroups3 />}
-                >
-                  <Trans>Join the Stoat Lounge</Trans>
-                </CategoryButton>
-              </Match>
-            </Switch>
-            <CategoryButton
-              variant="tertiary"
-              onClick={() => window.open("https://ko-fi.com/stoatchat")}
-              description={
-                <Trans>Support the project by donating - thank you!</Trans>
-              }
-              icon={<MdPayments />}
-            >
-              <Trans>Donate to Stoat</Trans>
-            </CategoryButton>
+            {/* STELLIS: closed instance — Lounge / Donate убраны */}
           </SeparatedColumn>
           <SeparatedColumn>
-            <Show when={CONFIGURATION.IS_STOAT}>
-              <CategoryButton
-                onClick={() => navigate("/discover")}
-                description={
-                  <Trans>
-                    Find a community based on your hobbies or interests.
-                  </Trans>
-                }
-                icon={<MdExplore />}
-              >
-                <Trans>Discover Stoat</Trans>
-              </CategoryButton>
-            </Show>
-            <CategoryButton
-              onClick={() =>
-                openModal({
-                  type: "settings",
-                  config: "user",
-                  context: { page: "feedback" },
-                })
-              }
-              description={
-                <Trans>
-                  Let us know how we can improve our app by giving us feedback.
-                </Trans>
-              }
-              icon={<MdRateReview {...iconSize(22)} />}
-            >
-              <Trans>Give feedback on Stoat</Trans>
-            </CategoryButton>
+            {/* STELLIS: Discover Stoat / Give feedback убраны */}
             <CategoryButton
               onClick={() => openModal({ type: "settings", config: "user" })}
               description={

@@ -146,34 +146,7 @@ export function AuthPage(props: { children: JSX.Element }) {
         </Nav>
         <FlowBase>{props.children}</FlowBase>
         <Nav>
-          <NavItems variant="stack">
-            <NavItems>
-              <LinkWithIcon href="https://github.com/stoatchat" target="_blank">
-                <BiLogosGithub size={24} />
-              </LinkWithIcon>
-              <LinkWithIcon
-                href="https://bsky.app/profile/stoat.chat"
-                target="_blank"
-              >
-                <img
-                  src={bluesky}
-                  style={{ height: "22px", "padding-top": "3px" }}
-                />
-              </LinkWithIcon>
-            </NavItems>
-            <Bullet />
-            <NavItems>
-              <a href="https://stoat.chat/about" target="_blank">
-                <Trans>About</Trans>
-              </a>
-              <a href="https://stoat.chat/terms" target="_blank">
-                <Trans>Terms of Service</Trans>
-              </a>
-              <a href="https://stoat.chat/privacy" target="_blank">
-                <Trans>Privacy Policy</Trans>
-              </a>
-            </NavItems>
-          </NavItems>
+          {/* STELLIS: closed instance — Stoat community nav (Github, Bluesky, About, Terms, Privacy) убран */}
           <NavItems variant="hide">
             <Trans>Image by {"@fakurian"}</Trans>
             <Bullet />

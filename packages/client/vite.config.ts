@@ -31,19 +31,19 @@ export default defineConfig({
       filename: "serviceWorker.ts",
       strategies: "injectManifest",
       injectManifest: {
-        maximumFileSizeToCacheInBytes: 4000000,
+        maximumFileSizeToCacheInBytes: 6000000,
       },
       manifest: {
-        name: "Stoat",
-        short_name: "Stoat",
-        description: "User-first open source chat platform.",
+        name: "Stellis",
+        short_name: "Stellis",
+        description: "Голоса между своими.",
         categories: ["communication", "chat", "messaging"],
         start_url: base,
         orientation: "portrait",
         display_override: ["window-controls-overlay"],
         display: "standalone",
-        background_color: "#101823",
-        theme_color: "#101823",
+        background_color: "#11141C",
+        theme_color: "#11141C",
         icons: [
           {
             src: `${base}assets/web/android-chrome-192x192.png`,
