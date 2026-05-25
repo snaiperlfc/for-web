@@ -82,6 +82,49 @@
   [data-stellis-compose-action="gif"] {
     display: none !important;
   }
+
+  /* Panda atomic typography overrides — the actual rule that bites.
+     Channel titles, sidebar names, message timestamps etc. use
+     Panda's `fs_1rem` (= 16px) and friends. The previous selectors
+     hit only the OUTER container, the inner text had its own
+     fs_* class. Scale them all down here.
+
+     Panda escapes dots in class names with `\.` — match via
+     attribute selectors to dodge the escaping issue entirely. */
+  [class~="fs_1rem"] {
+    font-size: 13px !important;
+  }
+  [class*="fs_1\\.125rem"],
+  [class*="fs_18px"] {
+    font-size: 14px !important;
+  }
+  [class*="fs_1\\.25rem"],
+  [class*="fs_20px"] {
+    font-size: 15px !important;
+  }
+  [class*="fs_1\\.5rem"],
+  [class*="fs_24px"] {
+    font-size: 18px !important;
+  }
+  [class*="fs_2rem"],
+  [class*="fs_32px"] {
+    font-size: 22px !important;
+  }
+  [class~="fs_0.875rem"],
+  [class*="fs_14px"] {
+    font-size: 12px !important;
+  }
+
+  /* Hold composition input at 16px specifically — iOS Safari
+     auto-zooms input fields with smaller font-size on focus. */
+  [contenteditable],
+  textarea,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"] {
+    font-size: 16px !important;
+  }
 }
 
 /* ============================================================
