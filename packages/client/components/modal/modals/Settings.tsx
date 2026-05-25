@@ -32,6 +32,7 @@ export function SettingsModal(
         <Presence>
           <Show when={props?.show}>
             <Motion.div
+              data-stellis-settings-modal
               style={{
                 height: "100%",
                 "pointer-events": "all",
