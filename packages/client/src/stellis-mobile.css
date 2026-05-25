@@ -227,6 +227,27 @@
     background: var(--md-sys-color-surface-container-high);
   }
 
+  /* CRITICAL: single-pane layout enforcement.
+     Sidebar wrapper in src/interface/Sidebar.tsx uses inline
+     `style={{display:flex}}` which beats Panda's atomic class
+     rules — the upstream `&[data-mobile=true][data-sidebar=closed]
+     > div:first-child { display:none }` is overridden by the
+     inline. !important here wins back the cascade. Same for
+     Content side. Without this, mobile shows BOTH server rail
+     and chat content side-by-side, leaving narrow gaps and
+     wasted space the user is reporting. */
+  div[data-mobile="true"][data-sidebar="closed"] > div:first-child {
+    display: none !important;
+  }
+  div[data-mobile="true"][data-sidebar="open"] > div:first-child {
+    width: 100% !important;
+    flex-shrink: 1 !important;
+    min-width: 0 !important;
+  }
+  div[data-mobile="true"][data-sidebar="open"] > div:nth-child(2) {
+    display: none !important;
+  }
+
   /* Home welcome page — stack action cards vertically on mobile.
      Upstream lays out two 260px-wide columns side-by-side which
      overflows a 390px iPhone (~520px wanted vs 390px available). */
