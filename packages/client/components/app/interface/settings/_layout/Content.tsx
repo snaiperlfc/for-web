@@ -20,7 +20,7 @@ export function SettingsContent(props: {
   title: (ctx: SettingsList<never>, key: string) => string;
   page: Accessor<string | undefined>;
 }) {
-  const { navigate } = useSettingsNavigation();
+  const { navigate, clearPage } = useSettingsNavigation();
 
   return (
     <div
@@ -31,6 +31,24 @@ export function SettingsContent(props: {
       <Show when={props.page()}>
         <InnerContent>
           <InnerColumn>
+            {/*
+              STELLIS: mobile-only "back to list" button. CSS in
+              stellis-mobile.css flips display:flex at <=900px or
+              touch pointer. On desktop it stays hidden because both
+              panes are visible side-by-side and the back action is
+              meaningless. Tap clears page() → user returns to the
+              Sidebar (category list).
+            */}
+            <div
+              data-stellis-settings-back
+              role="button"
+              tabIndex={0}
+              onClick={clearPage}
+              style={{ display: "none" }}
+            >
+              <span>←</span>
+              <span>Категории</span>
+            </div>
             <Text class="title" size="large">
               <Breadcrumbs
                 elements={props.page()!.split("/")}

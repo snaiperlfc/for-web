@@ -2,8 +2,10 @@ import {
   type JSX,
   Accessor,
   createContext,
+  createEffect,
   createMemo,
   createSignal,
+  onCleanup,
   untrack,
   useContext,
 } from "solid-js";
@@ -38,6 +40,8 @@ export type SettingsTransition = "normal" | "to-child" | "to-parent";
 const SettingsNavigationContext = createContext<{
   page: Accessor<string | undefined>;
   navigate: (path: string | SettingsEntry) => void;
+  // STELLIS: explicit clearer for mobile back button.
+  clearPage: () => void;
 }>();
 
 /**
@@ -82,11 +86,29 @@ export function Settings(props: SettingsProps & SettingsConfiguration<never>) {
     setPage(id);
   }
 
+  // STELLIS: mirror page() state onto body[data-stellis-settings-page]
+  // so mobile CSS can drive single-pane visibility (list vs detail).
+  // Cleared on unmount so other Settings modal instances (or stale
+  // attribute leftover) don't poison the next render.
+  createEffect(() => {
+    if (typeof document === "undefined") return;
+    document.body.setAttribute(
+      "data-stellis-settings-page",
+      page() ? "open" : "list",
+    );
+  });
+  onCleanup(() => {
+    if (typeof document !== "undefined") {
+      document.body.removeAttribute("data-stellis-settings-page");
+    }
+  });
+
   return (
     <SettingsNavigationContext.Provider
       value={{
         page,
         navigate,
+        clearPage: () => setPage(undefined),
       }}
     >
       <MemoisedList context={props.context} list={props.list}>
