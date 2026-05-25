@@ -27,9 +27,20 @@ export function SettingsSidebar(props: {
   const { navigate } = useSettingsNavigation();
 
   /**
-   * Select first page on load
+   * Select first page on load.
+   *
+   * STELLIS: skip auto-navigation on mobile — let the user see the
+   * category list first and tap into a specific page. Otherwise
+   * single-pane CSS jumps straight to detail view and the user
+   * never sees the menu.
    */
   onMount(() => {
+    if (typeof window !== "undefined") {
+      const isMobile = window.matchMedia(
+        "(max-width: 900px), (hover: none) and (pointer: coarse)",
+      ).matches;
+      if (isMobile) return;
+    }
     if (!props.page()) {
       props.setPage(props.list().entries[0].entries[0].id);
     }
