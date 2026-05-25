@@ -191,6 +191,7 @@ const Interface = (props: { children: JSX.Element }) => {
           <Match when={lifecycle.loadedOnce()}>
             <Layout
               disconnected={isDisconnected()}
+              data-stellis-layout
               style={{ "flex-grow": 1, "min-height": 0 }}
               data-sidebar={sidebarOpen() ? "open" : "closed"}
               data-mobile={isMobile() ? "true" : "false"}

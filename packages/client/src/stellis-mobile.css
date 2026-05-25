@@ -230,21 +230,24 @@
   /* CRITICAL: single-pane layout enforcement.
      Sidebar wrapper in src/interface/Sidebar.tsx uses inline
      `style={{display:flex}}` which beats Panda's atomic class
-     rules — the upstream `&[data-mobile=true][data-sidebar=closed]
-     > div:first-child { display:none }` is overridden by the
-     inline. !important here wins back the cascade. Same for
-     Content side. Without this, mobile shows BOTH server rail
-     and chat content side-by-side, leaving narrow gaps and
-     wasted space the user is reporting. */
-  div[data-mobile="true"][data-sidebar="closed"] > div:first-child {
+     rules — !important here wins back the cascade.
+
+     Selectors target [data-stellis-layout] specifically (NOT just
+     [data-mobile]) because Content also has data-mobile/data-sidebar
+     attributes — without the layout tag the rule was also hiding
+     Content's first child (Home Base, Channel content, etc.). */
+  div[data-stellis-layout][data-mobile="true"][data-sidebar="closed"]
+    > div:first-child {
     display: none !important;
   }
-  div[data-mobile="true"][data-sidebar="open"] > div:first-child {
+  div[data-stellis-layout][data-mobile="true"][data-sidebar="open"]
+    > div:first-child {
     width: 100% !important;
     flex-shrink: 1 !important;
     min-width: 0 !important;
   }
-  div[data-mobile="true"][data-sidebar="open"] > div:nth-child(2) {
+  div[data-stellis-layout][data-mobile="true"][data-sidebar="open"]
+    > div:nth-child(2) {
     display: none !important;
   }
 
