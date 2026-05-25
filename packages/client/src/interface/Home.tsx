@@ -120,7 +120,7 @@ export function HomePage() {
             fill: "var(--md-sys-color-on-surface)",
           })}
         />
-        <Buttons>
+        <Buttons data-stellis-home-buttons>
           <SeparatedColumn>
             <CategoryButton
               onClick={() =>

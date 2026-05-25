@@ -227,6 +227,21 @@
     background: var(--md-sys-color-surface-container-high);
   }
 
+  /* Home welcome page — stack action cards vertically on mobile.
+     Upstream lays out two 260px-wide columns side-by-side which
+     overflows a 390px iPhone (~520px wanted vs 390px available). */
+  [data-stellis-home-buttons] {
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 360px !important;
+    margin: 0 auto;
+  }
+  [data-stellis-home-buttons] > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+  }
+
   /* Always-visible mobile close X — pinned top-right above the
      modal content, above safe-area-top so iOS notch doesn't clip. */
   [data-stellis-settings-close] {
