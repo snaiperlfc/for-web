@@ -192,23 +192,18 @@ class Voice {
       },
     });
 
-    // STELLIS: skip upstream's `useTracks` call here. It's a Solid
-    // primitive that reads RoomContext internally even when `{ room }`
-    // is passed explicitly, and it triggers an unhandled promise
-    // rejection ("No room provided, make sure you are inside a Room
-    // context or pass the room explicitly") when invoked from a class
-    // method outside any Solid owner. That rejection aborts the rest
-    // of connect() before `await room.connect()` ever runs, so the UI
-    // hangs on "Подключение..." forever.
-    //
-    // vidTracks only powers the video grid (Participants/TrackLoop in
-    // VoiceCallCardActiveRoom). Returning an empty accessor here means
-    // the grid renders zero tiles until someone publishes a camera or
-    // screen share — which is the correct default for an audio-only
-    // join. If we need the video grid back later, the fix is to move
-    // the `useTracks` call inside a child component under <InRoom>
-    // (where RoomContext.Provider has the room) — not into this class.
-    this.vidTracks = () => [];
+    // STELLIS: useTracks is tolerant of a transiently-undefined room now
+    // (see solid-livekit-components fork commit ee0192d) — it returns an
+    // empty track list during the gap and re-subscribes once `room` is
+    // wired through context. Safe to call from this class method again
+    // so the video grid (camera + screen share) renders.
+    this.vidTracks = useTracks(
+      [
+        { source: Track.Source.Camera, withPlaceholder: true },
+        { source: Track.Source.ScreenShare, withPlaceholder: false },
+      ],
+      { room, onlySubscribed: false },
+    );
 
     batch(() => {
       this.#setRoom(room);
