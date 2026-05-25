@@ -111,6 +111,24 @@ export function Settings(props: SettingsProps & SettingsConfiguration<never>) {
         clearPage: () => setPage(undefined),
       }}
     >
+      {/*
+        STELLIS: always-visible mobile close button — pinned top-right
+        with safe-area inset. Both Sidebar (list) and Content (detail)
+        views need a way out; the upstream CloseAction lives inside
+        Content only. CSS in stellis-mobile.css flips display:flex on
+        touch/<=900px. Calls props.onClose directly so it bypasses
+        the page() state machine.
+      */}
+      <div
+        data-stellis-settings-close
+        role="button"
+        tabIndex={0}
+        onClick={() => props.onClose?.()}
+        style={{ display: "none" }}
+        aria-label="Закрыть настройки"
+      >
+        ✕
+      </div>
       <MemoisedList context={props.context} list={props.list}>
         {(list) => (
           <>
