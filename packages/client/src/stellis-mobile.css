@@ -325,9 +325,11 @@
    ============================================================ */
 @media (max-width: 900px), (hover: none) and (pointer: coarse) {
   :root {
-    /* Floor of 8px so even when safe-area resolves to 0, we still
-       leave a visible gap. max() picks whichever is larger. */
-    --stellis-safe-top: max(env(safe-area-inset-top, 0px), 4px);
+    /* STELLIS: removed top floor — with status bar style "default"
+       iOS reserves the status zone systemically and safe-top
+       resolves to 0px on PWA. Floor on bottom kept (8px) so the
+       home indicator doesn't kiss the composition input. */
+    --stellis-safe-top: env(safe-area-inset-top, 0px);
     --stellis-safe-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
     --stellis-safe-left: env(safe-area-inset-left, 0px);
     --stellis-safe-right: env(safe-area-inset-right, 0px);

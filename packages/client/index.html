@@ -10,9 +10,13 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <!-- black-translucent = status bar overlays our content. Pair with
-         safe-area-inset-top on header so text isn't hidden by the clock. -->
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- STELLIS: opaque status bar (was black-translucent). With
+         black-translucent iOS overlays status text on our content,
+         which requires safe-area-inset-top padding (~47-59px) and
+         visually pushes the header way down. "default" reserves the
+         status bar zone systemically — our viewport starts right
+         below it, no extra padding needed, tighter layout. -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Stellis" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#11141C" />
