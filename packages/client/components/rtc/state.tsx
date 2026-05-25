@@ -306,10 +306,51 @@ class Voice {
     try {
       const room = this.room();
       if (!room) throw "invalid state";
-      await room.localParticipant.setCameraEnabled(
-        !room.localParticipant.isCameraEnabled,
-      );
 
+      // STELLIS: same user-gesture trick as the mic probe in connect().
+      // iOS PWA + Safari reject getUserMedia after any await hop, so we
+      // request camera permission synchronously here (this method runs
+      // INSIDE the user-tap handler — see VoiceCallCardActions). Once
+      // permission lands, LiveKit's setCameraEnabled below can succeed.
+      // Only do the probe when turning the camera ON.
+      const turningOn = !room.localParticipant.isCameraEnabled;
+      if (turningOn) {
+        try {
+          const probe = await Promise.race([
+            navigator.mediaDevices.getUserMedia({ video: true }),
+            new Promise<MediaStream>((_, reject) =>
+              setTimeout(
+                () =>
+                  reject(new DOMException("camera probe timed out", "TimeoutError")),
+                3000,
+              ),
+            ),
+          ]);
+          probe.getTracks().forEach((t) => t.stop());
+        } catch (e) {
+          const name = (e as DOMException)?.name ?? "";
+          // NotAllowedError on iOS means the user has either denied in the
+          // permission dialog or never granted it via Settings → Stellis
+          // → Camera. Surface it so they know what to fix.
+          if (name === "NotAllowedError") {
+            alert(
+              "Камера запрещена. Включи доступ в Настройках:\n\niOS: Настройки → Stellis → Камера → Разрешить.\nMac Safari: Safari → Настройки → Веб-сайты → Камера → stellis.ru → Разрешить.",
+            );
+            return;
+          }
+          if (name === "NotFoundError") {
+            alert("Камера не найдена на этом устройстве.");
+            return;
+          }
+          if (!["TimeoutError", "AbortError"].includes(name)) {
+            this.onErr(e);
+            return;
+          }
+          // TimeoutError — keep going; LiveKit will retry inside setCameraEnabled
+        }
+      }
+
+      await room.localParticipant.setCameraEnabled(turningOn);
       this.#setVideo(room.localParticipant.isCameraEnabled);
     } catch (e) {
       this.onErr(e);
@@ -400,6 +441,20 @@ class Voice {
 
       this.#setScreenshare(room.localParticipant.isScreenShareEnabled);
     } else {
+      // STELLIS: iOS Safari + iOS PWA do not implement getDisplayMedia at
+      // all. Calling setScreenShareEnabled(true) below silently no-ops on
+      // iOS, leaving the user clicking a dead button. Detect the missing
+      // API up-front and tell the user — screen-sharing isn't possible
+      // from iOS, period (Apple WebKit limitation, not our config).
+      if (
+        typeof navigator.mediaDevices?.getDisplayMedia !== "function"
+      ) {
+        alert(
+          "Шаринг экрана с iPhone/iPad не поддерживается — это ограничение Apple Safari, не наше. Поделись через Mac/PC.",
+        );
+        return;
+      }
+
       const qualities = this.getEnabledScreenShareQualities();
       let screenPickerQualityName: ScreenShareQualityName | undefined;
 
