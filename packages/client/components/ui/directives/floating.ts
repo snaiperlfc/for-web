@@ -164,13 +164,26 @@ export function floating(element: HTMLElement, accessor: Accessor<Props>) {
               ? tooltip.content
               : tooltip!.aria!;
 
-          element.addEventListener("mouseenter", onMouseEnter);
-          element.addEventListener("mouseleave", onMouseLeave);
+          // STELLIS: skip mouseenter/leave on touch devices. iOS Safari
+          // treats the first tap on any element with a mouseenter handler
+          // as a "phantom hover" — the click doesn't fire until the
+          // second tap. Hiding the tooltip via CSS doesn't help because
+          // iOS still consumes the first tap for hover detection. With
+          // tooltips hidden on touch anyway (stellis-mobile.css), there's
+          // no reason to register the handlers.
+          const isTouchOnly =
+            typeof window !== "undefined" &&
+            window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
-          onCleanup(() => {
-            element.removeEventListener("mouseenter", onMouseEnter);
-            element.removeEventListener("mouseleave", onMouseLeave);
-          });
+          if (!isTouchOnly) {
+            element.addEventListener("mouseenter", onMouseEnter);
+            element.addEventListener("mouseleave", onMouseLeave);
+
+            onCleanup(() => {
+              element.removeEventListener("mouseenter", onMouseEnter);
+              element.removeEventListener("mouseleave", onMouseLeave);
+            });
+          }
         }
       },
     ),
