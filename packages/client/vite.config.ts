@@ -1,5 +1,6 @@
 import { lingui as linguiSolidPlugin } from "@lingui-solid/vite-plugin";
 import devtools from "@solid-devtools/transform";
+import { execFileSync } from "node:child_process";
 import { readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
@@ -13,8 +14,27 @@ import codegenPlugin from "./codegen.plugin";
 
 const base = process.env.BASE_PATH ?? "/";
 
+// STELLIS: bake the current git SHA + build timestamp into the bundle so
+// the UI can display which version a user is actually running — vital
+// when debugging "but I refreshed!" PWA-cache mismatches.
+const gitSha = (() => {
+  try {
+    return execFileSync("git", ["rev-parse", "--short", "HEAD"], {
+      encoding: "utf8",
+      cwd: __dirname,
+    }).trim();
+  } catch {
+    return "dev";
+  }
+})();
+const buildTime = new Date().toISOString().slice(0, 16).replace("T", " ");
+
 export default defineConfig({
   base,
+  define: {
+    __STELLIS_SHA__: JSON.stringify(gitSha),
+    __STELLIS_BUILD__: JSON.stringify(buildTime),
+  },
   plugins: [
     Inspect(),
     devtools(),

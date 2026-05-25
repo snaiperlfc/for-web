@@ -369,6 +369,32 @@ export const ServerList = (props: Props) => {
           <Avatar size={42} fallback={<MdLogout />} interactive />
         </a>
       </Tooltip>
+      {/*
+        STELLIS: version stamp. Bake-time injected from vite.config.ts via
+        `__STELLIS_SHA__` + `__STELLIS_BUILD__` define-replace. Helps debug
+        "ты на старом бандле" (PWA-cache mismatch) at a glance — the user
+        can read off the SHA and confirm it matches the latest deploy.
+        Tiny + dim so it doesn't compete with anything else in the rail.
+      */}
+      <Tooltip
+        placement="right"
+        content={`Билд: ${__STELLIS_BUILD__} UTC`}
+      >
+        <div
+          style={{
+            "font-family": "ui-monospace, monospace",
+            "font-size": "9px",
+            "line-height": "1",
+            opacity: "0.4",
+            "text-align": "center",
+            padding: "8px 0 6px",
+            cursor: "default",
+            "user-select": "all",
+          }}
+        >
+          {__STELLIS_SHA__}
+        </div>
+      </Tooltip>
     </ServerListBase>
   );
 };
