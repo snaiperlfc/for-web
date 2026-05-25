@@ -1,6 +1,10 @@
 [submodule "packages/stoat.js"]
 	path = packages/stoat.js
-	url = https://github.com/stoatchat/javascript-client-sdk
+	# STELLIS: forked to rebrand the system-bot username from "Revolt"
+	# to "Stellis" (see `stellis` branch in fork). Upstream is
+	# stoatchat/javascript-client-sdk.
+	url = https://github.com/snaiperlfc/javascript-client-sdk.git
+	branch = stellis
 [submodule "packages/client/assets"]
 	path = packages/client/assets
 	url = ssh://git@github.com/stoatchat/assets
