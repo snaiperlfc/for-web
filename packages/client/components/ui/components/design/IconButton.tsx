@@ -107,11 +107,22 @@ const iconButton2 = cva({
       },
     },
     size: {
+      // STELLIS: on touch devices (`pointer: coarse`) iOS HIG asks for 44pt
+      // minimum tappable area. xs/sm both fall under that. Bump only on
+      // touch — mouse-precision pointers keep the tighter desktop sizing.
       xs: {
         height: "32px",
+        "@media (pointer: coarse)": {
+          minHeight: "44px",
+          minWidth: "44px",
+        },
       },
       sm: {
         height: "40px",
+        "@media (pointer: coarse)": {
+          minHeight: "44px",
+          minWidth: "44px",
+        },
       },
       md: {
         height: "56px",

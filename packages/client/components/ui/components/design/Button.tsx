@@ -279,13 +279,21 @@ const button = cva({
      * Expressive sizes
      */
     size: {
+      // STELLIS: bump xs/sm to ≥44pt on touch (iOS HIG). Mouse pointer keeps
+      // tight desktop sizing; touch screens get a proper tappable target.
       xs: {
         height: "32px",
         "--padding-inline": "12px",
+        "@media (pointer: coarse)": {
+          minHeight: "44px",
+        },
       },
       sm: {
         height: "40px",
         "--padding-inline": "16px",
+        "@media (pointer: coarse)": {
+          minHeight: "44px",
+        },
       },
       md: {
         height: "56px",

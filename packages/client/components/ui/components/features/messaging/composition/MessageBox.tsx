@@ -126,7 +126,12 @@ const Parent = styled("div", {
 
     display: "flex",
     gap: "var(--gap-md)",
-    margin: "0 0 var(--gap-md) 0",
+    // STELLIS: bottom margin = max(gap-md, safe-bottom) — keeps the input
+    // clear of the iOS home indicator in PWA mode without leaving extra
+    // empty space on desktop (safe-bottom resolves to 0px there).
+    marginTop: 0,
+    marginInline: 0,
+    marginBottom: "max(var(--gap-md), var(--stellis-safe-bottom))",
     maxHeight: "var(--layout-height-message-box)",
   },
 });

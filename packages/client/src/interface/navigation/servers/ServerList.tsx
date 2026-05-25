@@ -407,6 +407,13 @@ const ServerListBase = styled("div", {
     display: "flex",
     flexDirection: "column",
 
+    // STELLIS: iOS PWA — reclaim notch + home-indicator gutters so the
+    // top-most logo and bottom-most SHA stamp aren't clipped. Defaults to
+    // 0px on non-notched devices (see index.html :root vars).
+    paddingTop: "var(--stellis-safe-top)",
+    paddingBottom: "var(--stellis-safe-bottom)",
+    paddingLeft: "var(--stellis-safe-left)",
+
     fill: "var(--md-sys-color-on-surface)",
   },
 });

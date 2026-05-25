@@ -35,11 +35,20 @@ export const Header = styled("div", {
   },
   variants: {
     placement: {
+      // STELLIS: top margin uses max(gap-md, safe-top) so on iPhone PWA the
+      // notch can't cover the channel title / sidebar title. Falls back to
+      // gap-md on desktop (safe-top resolves to 0px there).
       primary: {
-        margin: "var(--gap-md) var(--gap-md) var(--gap-md) 0",
+        marginTop: "max(var(--gap-md), var(--stellis-safe-top))",
+        marginRight: "var(--gap-md)",
+        marginBottom: "var(--gap-md)",
+        marginLeft: "0",
       },
       secondary: {
-        margin: "var(--gap-md)",
+        marginTop: "max(var(--gap-md), var(--stellis-safe-top))",
+        marginRight: "var(--gap-md)",
+        marginBottom: "var(--gap-md)",
+        marginLeft: "var(--gap-md)",
         backgroundColor: "var(--md-sys-color-surface-variant)",
       },
     },
