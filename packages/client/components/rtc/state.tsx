@@ -134,27 +134,49 @@ class Voice {
 
     // STELLIS: request mic permission in the SAME user-gesture context as
     // the join click — Safari (16+) silently rejects getUserMedia after
-    // any async hop. Without this, snaiperlfc's Safari session connected
-    // to LiveKit fine (server saw "participant active") but never
-    // published a microphone track — chat looked "connected but dead".
-    // We immediately stop the probe tracks; LiveKit will reopen with its
-    // own getUserMedia call below, which Safari now allows because the
-    // permission is cached.
+    // any async hop. Without this, Safari sessions connected to LiveKit
+    // fine (server saw "participant active") but never published a
+    // microphone track — chat looked "connected but dead".
+    //
+    // Race against a 3s timeout so this never blocks the whole connect()
+    // flow: in headless Chrome (no UI), in some Android browsers, and in
+    // edge cases where the permission dialog never paints, getUserMedia
+    // can hang forever. After 3s we just continue — LiveKit's own probe
+    // will retry inside setMicrophoneEnabled and either succeed (if the
+    // user granted permission late) or no-op (we'll log + flip micOn=false).
     if (this.speakingPermission && this.#settings.micOn) {
       try {
-        const probe = await navigator.mediaDevices.getUserMedia({
-          audio: {
-            deviceId: this.#settings.preferredAudioInputDevice,
-            echoCancellation: this.#settings.echoCancellation,
-            noiseSuppression: this.#settings.noiseSupression === "browser",
-            autoGainControl: this.#settings.autoGainControl,
-          },
-        });
+        const probe = await Promise.race([
+          navigator.mediaDevices.getUserMedia({
+            audio: {
+              deviceId: this.#settings.preferredAudioInputDevice,
+              echoCancellation: this.#settings.echoCancellation,
+              noiseSuppression: this.#settings.noiseSupression === "browser",
+              autoGainControl: this.#settings.autoGainControl,
+            },
+          }),
+          new Promise<MediaStream>((_, reject) =>
+            setTimeout(
+              () =>
+                reject(new DOMException("probe timed out", "TimeoutError")),
+              3000,
+            ),
+          ),
+        ]);
         probe.getTracks().forEach((t) => t.stop());
       } catch (e) {
-        // Don't abort the whole connect — user can grant permission later
-        // via UI mute button. Surface as a non-blocking error.
-        if ((e as Error).name !== "NotAllowedError") this.onErr(e);
+        // Swallow common cases (denied / no device / timeout) — never block
+        // connect(). Anything else still surfaces to the error modal.
+        const name = (e as DOMException)?.name ?? "";
+        const KNOWN = [
+          "NotAllowedError",
+          "NotFoundError",
+          "OverconstrainedError",
+          "TimeoutError",
+          "AbortError",
+        ];
+        if (!KNOWN.includes(name)) this.onErr(e);
+        console.warn("[voice] mic probe failed:", name, e);
       }
     }
 
