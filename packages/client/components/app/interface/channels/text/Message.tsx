@@ -38,6 +38,28 @@ import { EditMessage } from "./EditMessage";
 const RE_URL =
   /[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/;
 
+/**
+ * STELLIS: Giphy URL pattern — `https://giphy.com/gifs/<slug>-<ID>` or
+ * `https://giphy.com/gifs/<ID>`. The ID is the trailing alphanumeric run.
+ * `media.giphy.com` IS reachable from RU IPs even when `giphy.com` is
+ * blocked, so we synthesize the inline player without depending on the
+ * Stoat embed worker (which times out scraping the HTML page).
+ */
+const RE_GIPHY_URL =
+  /https?:\/\/(?:www\.)?giphy\.com\/gifs\/(?:[\w-]+-)?([a-zA-Z0-9]{6,})(?=\s|$|\?)/g;
+
+/**
+ * Extract Giphy IDs from message content. Returns array of media URLs.
+ */
+function extractGiphyMedia(content: string | undefined | null): string[] {
+  if (!content) return [];
+  const ids = new Set<string>();
+  for (const match of content.matchAll(RE_GIPHY_URL)) {
+    if (match[1]) ids.add(match[1]);
+  }
+  return [...ids].map((id) => `https://media.giphy.com/media/${id}/giphy.mp4`);
+}
+
 interface Props {
   /**
    * Message
@@ -78,17 +100,40 @@ export function Message(props: Props) {
 
   /**
    * Determine whether this message only contains a GIF
+   *
+   * STELLIS: also true when the message text is just a Giphy URL (no
+   * upstream embed, but we synthesise an inline preview below — so hide
+   * the bare URL so users don't see both the link AND the video).
    */
-  const isOnlyGIF = () =>
-    props.message.embeds &&
-    props.message.embeds.length === 1 &&
-    props.message.embeds[0].type === "Website" &&
-    ((props.message.embeds[0] as WebsiteEmbed).specialContent?.type === "GIF" ||
-      (props.message.embeds[0] as WebsiteEmbed).originalUrl?.startsWith(
-        "https://tenor.com",
-      )) &&
-    props.message.content &&
-    !props.message.content.replace(RE_URL, "").length;
+  const isOnlyGIF = () => {
+    if (!props.message.content) return false;
+    const remainder = props.message.content.replace(RE_URL, "").trim();
+    if (remainder.length) return false;
+
+    // Stoat / Tenor case
+    if (
+      props.message.embeds &&
+      props.message.embeds.length === 1 &&
+      props.message.embeds[0].type === "Website" &&
+      ((props.message.embeds[0] as WebsiteEmbed).specialContent?.type ===
+        "GIF" ||
+        (props.message.embeds[0] as WebsiteEmbed).originalUrl?.startsWith(
+          "https://tenor.com",
+        ))
+    ) {
+      return true;
+    }
+
+    // Stellis: bare Giphy URL with synthesised preview
+    if (
+      (!props.message.embeds || props.message.embeds.length === 0) &&
+      extractGiphyMedia(props.message.content).length > 0
+    ) {
+      return true;
+    }
+
+    return false;
+  };
 
   /**
    * React with an emoji
@@ -301,6 +346,47 @@ export function Message(props: Props) {
       <Show when={props.message.embeds}>
         <For each={props.message.embeds}>
           {(embed) => <Embed embed={embed} />}
+        </For>
+      </Show>
+      {/*
+        STELLIS: Giphy inline preview. Stoat's backend embed worker can't
+        scrape giphy.com from a RU VPS (RKN/Fastly geoblock), so
+        message.embeds for Giphy links is always empty. media.giphy.com IS
+        reachable though — we extract the GIF ID from the URL and render
+        the inline mp4 directly. No backend dependency, works for any
+        message containing a Giphy URL.
+
+        We only synthesize a preview when there's no upstream embed for
+        the same URL (otherwise we'd double-render).
+      */}
+      <Show
+        when={
+          !props.message.embeds?.some(
+            (e) =>
+              e.type === "Website" &&
+              (e as WebsiteEmbed).originalUrl?.includes("giphy.com"),
+          )
+        }
+      >
+        <For each={extractGiphyMedia(props.message.content)}>
+          {(url) => (
+            <div style={{ "max-width": "480px" }}>
+              <video
+                src={url}
+                autoplay
+                loop
+                muted
+                playsinline
+                preload="metadata"
+                style={{
+                  "max-width": "100%",
+                  "max-height": "360px",
+                  "border-radius": "8px",
+                  display: "block",
+                }}
+              />
+            </div>
+          )}
         </For>
       </Show>
       <Reactions
