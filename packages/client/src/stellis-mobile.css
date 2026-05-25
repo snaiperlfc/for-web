@@ -105,13 +105,7 @@
     display: none !important;
   }
 
-  /* Composition declutter — hide GIF picker on mobile. The picker
-     UI was designed for desktop hover; on phone it eats half the
-     screen and isn't useful for the closed-tribe-of-five use case.
-     Emoji stays — daily use, opens iOS keyboard emoji anyway. */
-  [data-stellis-compose-action="gif"] {
-    display: none !important;
-  }
+  /* GIF picker stays visible on mobile (user wants it for PWA). */
 
   /* Panda atomic typography overrides — the actual rule that bites.
      Channel titles, sidebar names, message timestamps etc. use
