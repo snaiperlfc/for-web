@@ -160,7 +160,14 @@ class Voice {
       this.#setScreenshare(false);
     });
 
-    room.addListener("connected", () => {
+    // STELLIS: factored post-connect work so we can call it from the event
+    // listener AND defensively after `await room.connect()` — upstream
+    // relied solely on the "connected" event, but in a race with ICE-pair
+    // switching the listener occasionally never fires on the client side
+    // even though LiveKit server marks the participant active. Symptom:
+    // card stuck on "Подключение..." forever.
+    const onConnected = () => {
+      if (this.state() === "CONNECTED") return; // idempotent
       this.#setState("CONNECTED");
       if (this.speakingPermission)
         room.localParticipant
@@ -175,9 +182,12 @@ class Voice {
               );
             }
           });
-    });
+    };
 
-    room.addListener("disconnected", () => this.#setState("DISCONNECTED"));
+    room.on("connected", onConnected);
+    room.on("reconnected", onConnected);
+    room.on("reconnecting", () => this.#setState("RECONNECTING"));
+    room.on("disconnected", () => this.#setState("DISCONNECTED"));
 
     if (!auth) {
       auth = await channel.joinCall("worldwide");
@@ -186,6 +196,11 @@ class Voice {
     await room.connect(auth.url, auth.token, {
       autoSubscribe: false,
     });
+
+    // Defensive fallback: room.connect() resolving means the room IS
+    // connected. If the "connected" listener didn't fire (event/listener
+    // race), still transition so the UI doesn't hang on CONNECTING.
+    onConnected();
   }
 
   disconnect() {
