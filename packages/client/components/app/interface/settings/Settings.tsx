@@ -111,24 +111,6 @@ export function Settings(props: SettingsProps & SettingsConfiguration<never>) {
         clearPage: () => setPage(undefined),
       }}
     >
-      {/*
-        STELLIS: always-visible mobile close button — pinned top-right
-        with safe-area inset. Both Sidebar (list) and Content (detail)
-        views need a way out; the upstream CloseAction lives inside
-        Content only. CSS in stellis-mobile.css flips display:flex on
-        touch/<=900px. Calls props.onClose directly so it bypasses
-        the page() state machine.
-      */}
-      <div
-        data-stellis-settings-close
-        role="button"
-        tabIndex={0}
-        onClick={() => props.onClose?.()}
-        style={{ display: "none" }}
-        aria-label="Закрыть настройки"
-      >
-        ✕
-      </div>
       <MemoisedList context={props.context} list={props.list}>
         {(list) => (
           <>
@@ -187,6 +169,24 @@ export function Settings(props: SettingsProps & SettingsConfiguration<never>) {
           </>
         )}
       </MemoisedList>
+      {/*
+        STELLIS: always-visible mobile close button. Rendered AFTER
+        MemoisedList so it's the LAST flex child of the modal
+        container — keeps `:first-child` = Sidebar and
+        `:nth-child(2)` = Content for the existing single-pane CSS.
+        Inline display:none on desktop; mobile CSS flips it to
+        position:fixed top-right with safe-area inset.
+      */}
+      <div
+        data-stellis-settings-close
+        role="button"
+        tabIndex={0}
+        onClick={() => props.onClose?.()}
+        style={{ display: "none" }}
+        aria-label="Закрыть настройки"
+      >
+        ✕
+      </div>
     </SettingsNavigationContext.Provider>
   );
 }
