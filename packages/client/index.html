@@ -48,12 +48,23 @@
         --stellis-safe-left: env(safe-area-inset-left, 0px);
       }
       html, body { margin: 0; background: #11141C; color: #F4F1E8; }
+      /* STELLIS: Explicit height chain so `height: 100%` inside the React
+         tree resolves to a concrete value. iOS PWA standalone with only
+         min-height was leaving a phantom address-bar zone empty at the
+         bottom — children using `height: 100%` collapsed to less than
+         viewport because the chain wasn't continuous. 100dvh = dynamic
+         viewport that follows iOS toolbar show/hide. */
+      html, body, #root {
+        height: 100vh;
+        height: 100dvh;
+      }
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-        /* 100dvh = dynamic viewport, accounts for iOS toolbars expanding /
-           collapsing on scroll. Old browsers fall back to 100vh. */
-        min-height: 100vh;
-        min-height: 100dvh;
+      }
+      #root {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
       }
       #boot-screen {
         position: fixed; inset: 0;
