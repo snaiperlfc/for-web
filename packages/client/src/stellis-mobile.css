@@ -135,6 +135,19 @@
   div[data-stellis-call-card="fixed"] [class*="Preview"] [class*="body"] {
     display: none !important;
   }
+
+  /* When user is on the navigation view (server rail + channel
+     list), hide the call card entirely — it'd otherwise hover at
+     its last fixed-position coordinates and intercept taps on
+     channel list rows. Re-appears once user opens a channel
+     (sidebar="closed" → chat view). Same hide rule for when the
+     right sidebar (members/search/pins) overlay is open. */
+  body:has(div[data-mobile="true"][data-sidebar="open"])
+    div[data-stellis-call-card],
+  body:has(div[data-stellis-right-sidebar])
+    div[data-stellis-call-card] {
+    display: none !important;
+  }
 }
 /* ============================================================
    Right sidebar (members / search / pins) — fullscreen overlay
