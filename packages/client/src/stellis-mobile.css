@@ -94,6 +94,49 @@
 }
 
 /* ============================================================
+   Voice call card on mobile — was overlapping chat content.
+   The card lives in a Portal at #floating with position:fixed
+   z-index:10 covering messages. Two changes:
+   1. Hide PiP (floating state) entirely on mobile — it's a tiny
+      bottom-right pip that just blocks the composition input.
+      User controls calls from the voice channel itself.
+   2. Reduce inactive card height so it doesn't eat half of the
+      visible message area on a narrow phone screen.
+   ============================================================ */
+@media (max-width: 900px), (hover: none) and (pointer: coarse) {
+  /* PiP — fully hidden. The user navigates back to the voice
+     channel to hang up. Tradeoff: no always-visible call control,
+     but saves screen real estate on mobile. */
+  div[data-stellis-call-card="floating"] {
+    display: none !important;
+  }
+
+  /* Fixed (inline-over-voice-channel) card — shrink it. Upstream
+     renders a 360x120 card at the top of the message area which
+     covers ~2-3 messages of chat. On a 390px wide phone this is
+     half the visible height. Shrink to a compact pill at full
+     width × 64px so it's a non-intrusive "Join voice" button. */
+  div[data-stellis-call-card="fixed"] {
+    /* Override Portal's hardcoded width:280px when state is fixed
+       — the variable trick from VoiceCallCardContext uses
+       position.width directly. Force full width via max-width. */
+    max-width: calc(100vw - 16px) !important;
+  }
+  div[data-stellis-call-card="fixed"] [class*="Card"][class*="active_false"] {
+    width: 100% !important;
+    height: 64px !important;
+  }
+  /* Compact inline Preview content — kill the subtitle and avatar
+     row gap so just the "Join voice channel" title shows. */
+  div[data-stellis-call-card="fixed"] [class*="Preview"] {
+    padding: 12px 16px !important;
+    gap: 6px !important;
+  }
+  div[data-stellis-call-card="fixed"] [class*="Preview"] [class*="body"] {
+    display: none !important;
+  }
+}
+/* ============================================================
    Tap highlights — kill the ugly grey iOS tap flash; we have
    Material ripples already.
    ============================================================ */

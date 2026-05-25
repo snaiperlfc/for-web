@@ -169,6 +169,7 @@ export function VoiceCallCardContext(props: { children: JSX.Element }) {
 
       <Portal ref={document.getElementById("floating")! as HTMLDivElement}>
         <div
+          data-stellis-call-card={state().type}
           style={{
             position: "fixed",
             "z-index": 10,
