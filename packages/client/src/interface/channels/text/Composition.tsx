@@ -417,12 +417,12 @@ export function MessageComposition(props: Props) {
               >
                 {(triggerProps) => (
                   <>
-                    <MessageBox.InlineIcon size="normal">
+                    <MessageBox.InlineIcon size="normal" data-stellis-compose-action="gif">
                       <IconButton onPress={triggerProps.onClickGif}>
                         <Symbol>gif</Symbol>
                       </IconButton>
                     </MessageBox.InlineIcon>
-                    <MessageBox.InlineIcon size="normal">
+                    <MessageBox.InlineIcon size="normal" data-stellis-compose-action="emoji">
                       <IconButton onPress={triggerProps.onClickEmoji}>
                         <Symbol>emoticon</Symbol>
                       </IconButton>

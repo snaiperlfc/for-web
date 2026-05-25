@@ -141,6 +141,7 @@ export function ChannelHeader(props: Props) {
         }
       >
         <IconButton
+          data-stellis-header-action="settings"
           onPress={() =>
             openModal({
               type: "settings",
@@ -183,6 +184,7 @@ export function ChannelHeader(props: Props) {
 
       <Show when={props.sidebarState}>
         <IconButton
+          data-stellis-header-action="pins"
           use:floating={{
             tooltip: {
               placement: "bottom",

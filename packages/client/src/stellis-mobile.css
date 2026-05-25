@@ -12,65 +12,75 @@
    ============================================================ */
 
 @media (max-width: 900px), (hover: none) and (pointer: coarse) {
-  /* Channel header — taller, bolder title, more padding.
-     Selector targets Panda's generated Header div by its base
-     class signature (height: 48px from layout/Header.tsx). */
+  /* Channel header — tighter on mobile. Keep height (44px is
+     the iOS HIG tappable minimum for icons inside) but smaller
+     title text so server names + cog/pin icons fit comfortably. */
   div[class*="h_48px"][class*="flex_0_auto"] {
-    height: 56px !important;
-    padding: 0 14px !important;
-    font-size: 17px !important;
-    letter-spacing: -0.2px !important;
+    height: 44px !important;
+    padding: 0 10px !important;
+    font-size: 13px !important;
+    letter-spacing: -0.1px !important;
   }
 
-  /* Message rendering — larger font, generous line-height for
-     readability. Hits anything that includes "Message" in
-     Panda's atomic class names. */
+  /* Message rendering — smaller, denser. Per request, mobile
+     should fit more content per screen. */
   div[class*="messageContainer"] {
-    padding-inline: 14px !important;
+    padding-inline: 10px !important;
   }
   div[class*="messageContainer"] [class*="MessageBody"] {
-    font-size: 15.5px !important;
-    line-height: 1.5 !important;
+    font-size: 13px !important;
+    line-height: 1.35 !important;
   }
 
-  /* MessageBox composition input — bigger touch target, more
-     breathing room. The text input itself can't be styled
-     directly because it's an editable contenteditable; we
-     style its parent flex container. */
+  /* MessageBox composition input — kept at 16px specifically to
+     avoid iOS auto-zoom-on-focus (Safari zooms input fields with
+     font-size <16px). The visible character density still feels
+     compact thanks to tight padding. */
   div[class*="layout-height-message-box"] textarea,
   div[class*="layout-height-message-box"] [contenteditable] {
     font-size: 16px !important;
-    line-height: 1.4 !important;
+    line-height: 1.3 !important;
   }
 
-  /* Server rail icons — bump up so taps don't fight neighbours. */
+  /* Server rail icons — restore upstream 56px. The bump to 60px
+     was unnecessary and just stole horizontal space. */
   div[class*="w_56px"][class*="h_56px"] {
-    width: 60px !important;
-    height: 60px !important;
+    width: 56px !important;
+    height: 56px !important;
   }
 
-  /* Settings + Logout circular buttons at bottom of rail — they
-     use Avatar size={42} but on touch we want at least 44px. */
-  div[class*="ServerList"] [class*="Avatar"][style*="42"] {
-    transform: scale(1.07);
-    transform-origin: center;
-  }
-
-  /* Make the entire body slightly more spacious so margins don't
-     feel crammed against the chrome. Effect is subtle: 1px shift
-     down + small breathing on the sides. */
+  /* Body baseline — smaller default. Affects any element that
+     inherits font-size (timestamps, status text, etc.). */
   body {
-    font-size: 15px;
+    font-size: 13px;
   }
 
-  /* Sticky polish for the channel sidebar title — clearly larger
-     so the user always knows where they are. */
+  /* Sidebar section title ("Беседы" / server name) — readable
+     but compact. */
   header[class*="Header"][class*="placement_secondary"],
   div[class*="Header"][class*="placement_secondary"] {
-    height: 56px !important;
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    letter-spacing: -0.3px !important;
+    height: 44px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+  }
+
+  /* Declutter — hide rarely-used header actions on mobile.
+     Channel Settings (cog) and Pinned Messages (pin) icons are
+     low-frequency on a phone where users mostly scroll/read/send.
+     Settings still accessible via full Settings modal. Pinned
+     messages still accessible via long-press menu on a message. */
+  button[data-stellis-header-action="settings"],
+  button[data-stellis-header-action="pins"] {
+    display: none !important;
+  }
+
+  /* Composition declutter — hide GIF picker on mobile. The picker
+     UI was designed for desktop hover; on phone it eats half the
+     screen and isn't useful for the closed-tribe-of-five use case.
+     Emoji stays — daily use, opens iOS keyboard emoji anyway. */
+  [data-stellis-compose-action="gif"] {
+    display: none !important;
   }
 }
 
