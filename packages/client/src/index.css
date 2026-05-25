@@ -1,1 +1,5 @@
 @layer reset, base, tokens, recipes, utilities;
+
+/* STELLIS: mobile-specific polish. Loaded after Panda's utilities layer so
+   the !important rules inside win against atomic class output. */
+@import "./stellis-mobile.css";

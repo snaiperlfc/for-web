@@ -1,0 +1,117 @@
+/* ============================================================
+   STELLIS mobile polish — Visible improvements at <= 900px CSS
+   viewport. Applies to iOS Safari, Android Chrome, and Stellis
+   PWA standalone alike. NOT a substitute for safe-area-inset
+   (which only kicks in when the OS reserves a notch zone) but
+   delivers clear visual changes that don't depend on PWA install.
+
+   Strategy: target high-traffic surfaces (channel header,
+   message body, composition, server rail) with bigger touch-
+   friendly sizes + breathing room. Desktop styles are
+   untouched.
+   ============================================================ */
+
+@media (max-width: 900px), (hover: none) and (pointer: coarse) {
+  /* Channel header — taller, bolder title, more padding.
+     Selector targets Panda's generated Header div by its base
+     class signature (height: 48px from layout/Header.tsx). */
+  div[class*="h_48px"][class*="flex_0_auto"] {
+    height: 56px !important;
+    padding: 0 14px !important;
+    font-size: 17px !important;
+    letter-spacing: -0.2px !important;
+  }
+
+  /* Message rendering — larger font, generous line-height for
+     readability. Hits anything that includes "Message" in
+     Panda's atomic class names. */
+  div[class*="messageContainer"] {
+    padding-inline: 14px !important;
+  }
+  div[class*="messageContainer"] [class*="MessageBody"] {
+    font-size: 15.5px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* MessageBox composition input — bigger touch target, more
+     breathing room. The text input itself can't be styled
+     directly because it's an editable contenteditable; we
+     style its parent flex container. */
+  div[class*="layout-height-message-box"] textarea,
+  div[class*="layout-height-message-box"] [contenteditable] {
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Server rail icons — bump up so taps don't fight neighbours. */
+  div[class*="w_56px"][class*="h_56px"] {
+    width: 60px !important;
+    height: 60px !important;
+  }
+
+  /* Settings + Logout circular buttons at bottom of rail — they
+     use Avatar size={42} but on touch we want at least 44px. */
+  div[class*="ServerList"] [class*="Avatar"][style*="42"] {
+    transform: scale(1.07);
+    transform-origin: center;
+  }
+
+  /* Make the entire body slightly more spacious so margins don't
+     feel crammed against the chrome. Effect is subtle: 1px shift
+     down + small breathing on the sides. */
+  body {
+    font-size: 15px;
+  }
+
+  /* Sticky polish for the channel sidebar title — clearly larger
+     so the user always knows where they are. */
+  header[class*="Header"][class*="placement_secondary"],
+  div[class*="Header"][class*="placement_secondary"] {
+    height: 56px !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.3px !important;
+  }
+}
+
+/* ============================================================
+   Forced safe-area floor for iOS Safari.
+   In Safari (NOT PWA) safe-area-inset-bottom resolves to 0
+   because Safari handles the home indicator with its own
+   toolbar. But the toolbar collapses on scroll, leaving the
+   home indicator overlapping our input. Add a minimum 8px
+   bottom-padding floor so even Safari users get a small gap.
+   ============================================================ */
+@media (max-width: 900px), (hover: none) and (pointer: coarse) {
+  :root {
+    /* Floor of 8px so even when safe-area resolves to 0, we still
+       leave a visible gap. max() picks whichever is larger. */
+    --stellis-safe-top: max(env(safe-area-inset-top, 0px), 4px);
+    --stellis-safe-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
+    --stellis-safe-left: env(safe-area-inset-left, 0px);
+    --stellis-safe-right: env(safe-area-inset-right, 0px);
+  }
+}
+
+/* ============================================================
+   Tap highlights — kill the ugly grey iOS tap flash; we have
+   Material ripples already.
+   ============================================================ */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Subtle visual feedback on tappable surfaces — small scale
+     down on press, then bounce back. Doesn't fight ripples. */
+  button:active,
+  a:active,
+  [role="button"]:active {
+    transform: scale(0.97);
+    transition: transform 80ms cubic-bezier(0.3, 0, 0.3, 1);
+  }
+  button,
+  a,
+  [role="button"] {
+    transition: transform 200ms cubic-bezier(0.3, 0, 0.3, 1);
+  }
+}
