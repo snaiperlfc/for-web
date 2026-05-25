@@ -2,12 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <!-- STELLIS: viewport-fit=cover lets the app paint under the notch / home
-         indicator. Then safe-area-inset-* in CSS reclaims the safe rectangle
-         per component. Without this, iOS reserves white bars there. -->
+    <!-- STELLIS: viewport handling. Dropped viewport-fit=cover because it
+         conflicts with apple-mobile-web-app-status-bar-style=default —
+         cover tells iOS to give us the full physical screen including
+         reserved system zones, then 100vh/100dvh report a height larger
+         than visible, causing overflow at the bottom. Without `cover`,
+         iOS reserves status bar + home indicator zones systemically and
+         our viewport equals the visible area exactly. Works on iPhone 8
+         (no notch), iPhone 14 Pro (Dynamic Island), Galaxy, etc. — iOS
+         and Android Chrome both honor the same protocol. -->
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <!-- STELLIS: opaque status bar (was black-translucent). With
@@ -48,15 +54,24 @@
         --stellis-safe-left: env(safe-area-inset-left, 0px);
       }
       html, body { margin: 0; background: #11141C; color: #F4F1E8; }
-      /* STELLIS: Explicit height chain so `height: 100%` inside the React
-         tree resolves to a concrete value. iOS PWA standalone with only
-         min-height was leaving a phantom address-bar zone empty at the
-         bottom — children using `height: 100%` collapsed to less than
-         viewport because the chain wasn't continuous. 100dvh = dynamic
-         viewport that follows iOS toolbar show/hide. */
-      html, body, #root {
+      /* STELLIS: viewport height with safe fallbacks for the full range
+         of devices we support — iPhone 8 (375×667, no notch, iOS 15),
+         iPhone 14 Pro Max (430×932, Dynamic Island), Galaxy S21+
+         (360×800), Pixel, etc.
+
+         Order: 100% works everywhere when html has explicit height; 100vh
+         is the legacy fallback; 100dvh is the modern dynamic viewport
+         (supported iOS 15.4+, Chrome 108+, Samsung Internet 22+). Last
+         declaration wins on browsers that understand it, so newer
+         iPhones get dvh (correct visible area), older fall back to vh. */
+      html {
+        height: 100%;
+      }
+      body, #root {
         height: 100vh;
         height: 100dvh;
+        min-height: 100vh;
+        min-height: 100dvh;
       }
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
@@ -65,6 +80,7 @@
         display: flex;
         flex-direction: column;
         min-height: 0;
+        overflow: hidden;
       }
       #boot-screen {
         position: fixed; inset: 0;
