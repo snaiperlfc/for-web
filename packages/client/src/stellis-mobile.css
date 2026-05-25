@@ -65,6 +65,13 @@
     letter-spacing: 0 !important;
   }
 
+  /* Tooltips: hide on touch — touch devices don't hover, so tooltips
+     just pop up on tap and block underlying UI (e.g. "OWLS" tooltip
+     covering the hamburger menu in the channel header). */
+  [data-stellis-tooltip] {
+    display: none !important;
+  }
+
   /* STELLIS mobile: hamburger button in channel header to toggle
      nav view. Replaces removed swipe gestures (iOS uses them for
      history back/forward). Tap → opens server rail + channel
