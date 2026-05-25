@@ -515,17 +515,13 @@ body[data-stellis-call-fullscreen="true"]
   * {
     -webkit-tap-highlight-color: transparent;
   }
-  /* Subtle visual feedback on tappable surfaces — small scale
-     down on press, then bounce back. Doesn't fight ripples. */
-  button:active,
-  a:active,
-  [role="button"]:active {
-    transform: scale(0.97);
-    transition: transform 80ms cubic-bezier(0.3, 0, 0.3, 1);
-  }
+  /* `touch-action: manipulation` — disables the 300ms double-tap-
+     to-zoom delay AND prevents iOS from cancelling click events on
+     elements with scaled transforms. The press scale animation we
+     had before was eating taps on some iOS Safari/PWA states. */
   button,
   a,
   [role="button"] {
-    transition: transform 200ms cubic-bezier(0.3, 0, 0.3, 1);
+    touch-action: manipulation;
   }
 }
