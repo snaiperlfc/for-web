@@ -65,6 +65,29 @@
     letter-spacing: 0 !important;
   }
 
+  /* STELLIS mobile: hamburger button in channel header to toggle
+     nav view. Replaces removed swipe gestures (iOS uses them for
+     history back/forward). Tap → opens server rail + channel
+     list pane. From there user taps a channel to return to chat. */
+  [data-stellis-mobile-menu] {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: 4px;
+    border-radius: 8px;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--md-sys-color-on-surface);
+    user-select: none;
+    flex-shrink: 0;
+  }
+  [data-stellis-mobile-menu]:active {
+    background: var(--md-sys-color-surface-container-high);
+    transform: scale(0.94);
+  }
+
   /* Declutter — hide rarely-used header actions on mobile.
      Channel Settings (cog) and Pinned Messages (pin) icons are
      low-frequency on a phone where users mostly scroll/read/send.
@@ -251,27 +274,10 @@
     display: none !important;
   }
 
-  /* In nav view (sidebar=open) on mobile, the Sidebar wrapper
-     contains [ServerList rail, ChannelList sidebar]. The rail at
-     56px eats horizontal space and the channel list compresses.
-     Hide the rail — channel list takes full width. Server
-     switching still works via the existing server-picker UI; on
-     mobile you swipe back to chat then re-swipe right after
-     navigating, or tap a server avatar that floats in the list. */
-  div[data-stellis-layout][data-mobile="true"][data-sidebar="open"]
-    > div:first-child
-    > div:first-child {
-    display: none !important;
-  }
-  /* Channel-list pane: stretch to full available width — the
-     wrapper is 100% and the rail is now display:none. */
-  div[data-stellis-layout][data-mobile="true"][data-sidebar="open"]
-    > div:first-child
-    > *:not(:first-child) {
-    width: 100% !important;
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-  }
+  /* In nav view (sidebar=open) the Sidebar wrapper holds the
+     server rail + channel list. Keep both visible — user said
+     "where did sidebar go" after we hid the rail. Channel list
+     just gets whatever width remains after the 56px rail. */
 
   /* Home welcome page — stack action cards vertically on mobile.
      Upstream lays out two 260px-wide columns side-by-side which

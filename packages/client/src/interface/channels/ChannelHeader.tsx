@@ -69,6 +69,29 @@ export function ChannelHeader(props: Props) {
 
   return (
     <>
+      {/*
+        STELLIS mobile: hamburger toggle. iOS PWA / Safari claim
+        horizontal swipes for history back/forward, so we can't rely
+        on swipe gestures to switch between chat and nav views. This
+        button always opens the navigation (server rail + channel
+        list). Hidden on desktop via stellis-mobile.css.
+      */}
+      <div
+        data-stellis-mobile-menu
+        role="button"
+        tabIndex={0}
+        onClick={() =>
+          state.layout.setSectionState(
+            LAYOUT_SECTIONS.PRIMARY_SIDEBAR,
+            true,
+            true,
+          )
+        }
+        aria-label="Открыть навигацию"
+        style={{ display: "none" }}
+      >
+        ☰
+      </div>
       <Switch>
         <Match
           when={

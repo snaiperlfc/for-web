@@ -96,53 +96,11 @@ const Interface = (props: { children: JSX.Element }) => {
   const sidebarOpen = () =>
     state.layout.getSectionState(LAYOUT_SECTIONS.PRIMARY_SIDEBAR, true);
 
-  // STELLIS mobile: native iOS-style swipe to toggle the navigation pane.
-  //
-  // Heuristic (kept narrow on purpose to not eat the message-list scroll):
-  //   - touchstart records origin + timestamp
-  //   - if total horizontal travel > 70px AND |dx| > 2*|dy| AND duration < 500ms,
-  //     swipe wins; toggle sidebar based on direction
-  //   - vertical-dominant gestures cancel the swipe (no toggle), so scrolling
-  //     a code block or message stream isn't hijacked
-  //
-  // Edge-only would be safer (only register if startX < 20) but it breaks
-  // PWAs in landscape where the visible-edge mapping is weird. We rely on the
-  // |dx| > 2*|dy| threshold instead.
-  let swipeStartX = 0;
-  let swipeStartY = 0;
-  let swipeStartT = 0;
-  let swipeActive = false;
-  const handleTouchStart = (e: TouchEvent) => {
-    if (!isMobile() || e.touches.length !== 1) {
-      swipeActive = false;
-      return;
-    }
-    const t = e.touches[0];
-    swipeStartX = t.clientX;
-    swipeStartY = t.clientY;
-    swipeStartT = Date.now();
-    swipeActive = true;
-  };
-  const handleTouchEnd = (e: TouchEvent) => {
-    if (!swipeActive || !isMobile()) return;
-    swipeActive = false;
-    const t = e.changedTouches[0];
-    if (!t) return;
-    const dx = t.clientX - swipeStartX;
-    const dy = t.clientY - swipeStartY;
-    const dt = Date.now() - swipeStartT;
-    if (dt > 500) return;
-    if (Math.abs(dx) < 70) return;
-    if (Math.abs(dx) < Math.abs(dy) * 2) return;
-    const open = sidebarOpen();
-    if (dx > 0 && !open) {
-      // Swipe right → open navigation
-      state.layout.setSectionState(LAYOUT_SECTIONS.PRIMARY_SIDEBAR, true, true);
-    } else if (dx < 0 && open) {
-      // Swipe left → close navigation, back to chat
-      state.layout.setSectionState(LAYOUT_SECTIONS.PRIMARY_SIDEBAR, false, true);
-    }
-  };
+  // STELLIS mobile: previously had a swipe-left/right gesture to toggle the
+  // nav pane. Removed because iOS PWA and Safari claim those gestures for
+  // history back/forward — every swipe was fighting the system. Replaced
+  // with an explicit hamburger (☰) button in the channel header (see
+  // ChannelHeader.tsx, shown only on mobile via stellis-mobile.css).
 
   function isDisconnected() {
     return [
@@ -195,8 +153,6 @@ const Interface = (props: { children: JSX.Element }) => {
               style={{ "flex-grow": 1, "min-height": 0 }}
               data-sidebar={sidebarOpen() ? "open" : "closed"}
               data-mobile={isMobile() ? "true" : "false"}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
               onDragOver={(e) => {
                 if (e.dataTransfer) e.dataTransfer.dropEffect = "none";
               }}
