@@ -7,7 +7,10 @@
 	update = none
 [submodule "packages/solid-livekit-components"]
 	path = packages/solid-livekit-components
-	url = https://github.com/revoltchat/solid-livekit-components
+	# STELLIS: forked to apply useTracks/useEnsureRoom tolerance patch
+	# (see commit ee0192d in fork). Upstream is
+	# stoatchat/javascript-solid-livekit-components.
+	url = https://github.com/snaiperlfc/javascript-solid-livekit-components.git
 [submodule "packages/js-lingui-solid"]
 	path = packages/js-lingui-solid
 	url = https://github.com/revoltchat/js-lingui-solid
