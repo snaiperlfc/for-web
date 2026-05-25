@@ -221,7 +221,14 @@ export function TextChannel(props: ChannelPageProps) {
             sidebarState().state !== "default"
           }
         >
+          {/*
+            STELLIS mobile: this entire right-sidebar div becomes a fullscreen
+            overlay via stellis-mobile.css (data-stellis-right-sidebar).
+            On desktop unchanged. The back button below the title bar is hidden
+            on desktop with the same CSS — it only appears at touch-pointer.
+          */}
           <div
+            data-stellis-right-sidebar
             ref={sidebarScrollTargetElement}
             use:scrollable={{
               direction: "y",
@@ -232,6 +239,35 @@ export function TextChannel(props: ChannelPageProps) {
               width: sidebarState().state !== "default" ? "360px" : "",
             }}
           >
+            {/*
+              STELLIS: mobile-only back button at the top of the right sidebar.
+              Tapping it closes whichever flow is open (search / pins / members)
+              and returns the user to the main chat. Touch-device-only so it
+              doesn't pollute the desktop chrome.
+            */}
+            <div
+              data-stellis-sidebar-back
+              role="button"
+              tabIndex={0}
+              onClick={() => {
+                // Close search/pins state if active.
+                if (sidebarState().state !== "default") {
+                  setSidebarState({ state: "default" });
+                }
+                // Close member sidebar regardless.
+                state.layout.setSectionState(
+                  LAYOUT_SECTIONS.MEMBER_SIDEBAR,
+                  false,
+                  true,
+                );
+              }}
+              style={{
+                display: "none",
+              }}
+            >
+              <span>←</span>
+              <span>Назад к чату</span>
+            </div>
             <Switch
               fallback={
                 <MemberSidebar
