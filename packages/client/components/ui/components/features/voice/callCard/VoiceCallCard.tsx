@@ -283,6 +283,24 @@ function VoiceCallCard(props: { channel: Channel }) {
 
   let viewRef: HTMLDivElement | undefined;
 
+  // STELLIS: iOS Safari and standalone PWAs do NOT implement
+  // requestFullscreen() for arbitrary elements — only <video>. The
+  // upstream code calls viewRef.requestFullscreen() which silently
+  // fails on iPhone, leaving the call card stuck at its inline size.
+  // Detection: standalone PWA OR iOS user-agent OR no fullscreen API.
+  const useCssFullscreen = () => {
+    if (typeof window === "undefined") return false;
+    if (typeof document === "undefined") return false;
+    if (!document.fullscreenEnabled) return true;
+    const ua = navigator.userAgent;
+    const iOS = /iPhone|iPad|iPod/.test(ua) || /Macintosh/.test(ua) && "ontouchend" in document;
+    if (iOS) return true;
+    const standalone =
+      window.matchMedia?.("(display-mode: standalone)").matches ||
+      (window.navigator as { standalone?: boolean }).standalone;
+    return !!standalone;
+  };
+
   onMount(() => {
     viewRef?.addEventListener("fullscreenchange", () => {
       if (!document.fullscreenElement) {
@@ -291,7 +309,24 @@ function VoiceCallCard(props: { channel: Channel }) {
     });
   });
 
+  // STELLIS: mirror voice.fullscreen() onto a root-level body
+  // attribute so CSS can lift the Portal into a viewport-cover
+  // overlay. Works on every device including iOS where the native
+  // API is missing.
   createEffect(() => {
+    if (typeof document === "undefined") return;
+    if (voice.fullscreen() && inCall()) {
+      document.body.setAttribute("data-stellis-call-fullscreen", "true");
+    } else {
+      document.body.removeAttribute("data-stellis-call-fullscreen");
+    }
+  });
+
+  createEffect(() => {
+    // Skip the native fullscreen API path on iOS / standalone PWA —
+    // it would just silently fail. CSS-based path below covers it.
+    if (useCssFullscreen()) return;
+
     if (voice.fullscreen() && inCall()) {
       if (!viewRef?.isSameNode(document.fullscreenElement)) {
         if (document.fullscreenElement) {

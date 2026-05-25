@@ -159,6 +159,60 @@
     display: none !important;
   }
 }
+
+/* ============================================================
+   Voice call CSS fullscreen (iOS-safe).
+   iOS Safari and standalone PWAs cannot use requestFullscreen()
+   on arbitrary div elements. VoiceCallCard.tsx now mirrors the
+   voice.fullscreen() signal onto body[data-stellis-call-fullscreen]
+   so we can lift the Portal to a viewport-cover overlay via CSS.
+   Applies on all viewports (not just mobile) so desktop users on
+   browsers without div-fullscreen support still get a usable
+   maximized view.
+   ============================================================ */
+body[data-stellis-call-fullscreen="true"] {
+  /* Lock body scroll while in fullscreen call. */
+  overflow: hidden;
+}
+body[data-stellis-call-fullscreen="true"] div[data-stellis-call-card] {
+  /* Override the inline position:fixed + state.x/y transform from
+     VoiceCallCardContext. Cover the whole viewport. */
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  transform: none !important;
+  max-width: none !important;
+  z-index: 100 !important;
+  /* Respect notch + home indicator. */
+  padding-top: var(--stellis-safe-top, 0) !important;
+  padding-bottom: var(--stellis-safe-bottom, 0) !important;
+  padding-left: var(--stellis-safe-left, 0) !important;
+  padding-right: var(--stellis-safe-right, 0) !important;
+  background: var(--md-sys-color-surface);
+}
+body[data-stellis-call-fullscreen="true"]
+  div[data-stellis-call-card]
+  [class*="Card"] {
+  /* Force inner Card to fill the lifted Portal. The upstream
+     Card uses {width:100% height:40vh} in active state — we need
+     full height when fullscreen. */
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+}
+body[data-stellis-call-fullscreen="true"]
+  div[data-stellis-call-card]
+  [class*="Base"] {
+  /* The Base wrapper applies position:absolute top:gap-md inside
+     the Portal; with our lift it interferes. Reset positioning. */
+  position: relative !important;
+  top: 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
+}
 /* ============================================================
    Right sidebar (members / search / pins) — fullscreen overlay
    on mobile so it doesn't push the main chat out and cause
