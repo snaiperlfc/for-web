@@ -49,16 +49,26 @@ const Interface = (props: { children: JSX.Element }) => {
     }
   });
 
-  // STELLIS: mobile responsiveness — track viewport width and auto-collapse
-  // the primary sidebar when navigating to a channel on small screens, so
-  // mobile users see one pane at a time (server list / channel list / content).
+  // STELLIS: mobile responsiveness — collapse to single-pane on actual phones.
+  //
+  // Detection (OR of two signals):
+  //   1. max-width <= 900px      catches iPhone portrait + most landscape sizes
+  //                              (iPhone Pro Max landscape = 932 — falls back
+  //                              to signal 2)
+  //   2. (hover: none) AND (pointer: coarse)   any touch-primary device
+  //                              regardless of viewport size
+  //
+  // Using BOTH means a Mac with a touchscreen doesn't get single-pane (it has
+  // hover too), but every iPhone/iPad and most Android phones do.
+  const MOBILE_QUERY =
+    "(max-width: 900px), (hover: none) and (pointer: coarse)";
   const [isMobile, setIsMobile] = createSignal(
     typeof window !== "undefined"
-      ? window.matchMedia("(max-width: 767px)").matches
+      ? window.matchMedia(MOBILE_QUERY).matches
       : false,
   );
   if (typeof window !== "undefined") {
-    const mq = window.matchMedia("(max-width: 767px)");
+    const mq = window.matchMedia(MOBILE_QUERY);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener("change", handler);
     onCleanup(() => mq.removeEventListener("change", handler));

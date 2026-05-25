@@ -426,7 +426,22 @@ export const ServerList = (props: Props) => {
             (window.navigator as { standalone?: boolean }).standalone
               ? "Y"
               : "N";
-          el.textContent = `T${top} R${right} B${bottom} L${left} c${coarse} s${standalone}`;
+          const w = window.innerWidth;
+          const h = window.innerHeight;
+          const mobileQ = window.matchMedia(
+            "(max-width: 900px), (hover: none) and (pointer: coarse)",
+          ).matches
+            ? "Y"
+            : "N";
+          // Find Layout element to see what data-mobile actually resolved to
+          // by reading the data-* attribute directly off the DOM.
+          const layoutEl = document.querySelector("[data-mobile]");
+          const layoutMobile = layoutEl?.getAttribute("data-mobile") ?? "?";
+          const layoutSidebar = layoutEl?.getAttribute("data-sidebar") ?? "?";
+          el.textContent =
+            `T${top} R${right} B${bottom} L${left}\n` +
+            `${w}x${h} c${coarse} s${standalone} mq${mobileQ}\n` +
+            `dm:${layoutMobile} db:${layoutSidebar}`;
         }}
         style={{
           "font-family": "ui-monospace, monospace",
@@ -436,7 +451,7 @@ export const ServerList = (props: Props) => {
           "text-align": "center",
           color: "#E5A857",
           padding: "0 2px 4px",
-          "word-break": "break-all",
+          "white-space": "pre-line",
         }}
       />
     </ServerListBase>
