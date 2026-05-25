@@ -395,65 +395,6 @@ export const ServerList = (props: Props) => {
           {__STELLIS_SHA__}
         </div>
       </Tooltip>
-      {/*
-        STELLIS DEBUG: temporary diagnostic readout of the iOS PWA
-        safe-area-inset values + pointer media-query state. Shows in the
-        bottom of the server rail right below the SHA stamp. If it reads
-        "T0 B0" on iPhone the PWA was installed before viewport-fit=cover
-        landed → user needs to delete + re-add to home screen.
-        Remove after iPhone PWA polish is confirmed working.
-      */}
-      <div
-        ref={(el) => {
-          if (!el) return;
-          // Compute the inset live so we read the actual resolved px, not
-          // the variable string. Created via JS env() probe div.
-          const probe = document.createElement("div");
-          probe.style.cssText =
-            "position:fixed;top:env(safe-area-inset-top);left:env(safe-area-inset-left);right:env(safe-area-inset-right);bottom:env(safe-area-inset-bottom);pointer-events:none;visibility:hidden;";
-          document.body.appendChild(probe);
-          const rect = probe.getBoundingClientRect();
-          const top = Math.round(rect.top);
-          const bottom = Math.round(window.innerHeight - rect.bottom);
-          const left = Math.round(rect.left);
-          const right = Math.round(window.innerWidth - rect.right);
-          probe.remove();
-          const coarse = window.matchMedia("(pointer: coarse)").matches
-            ? "Y"
-            : "N";
-          const standalone =
-            window.matchMedia("(display-mode: standalone)").matches ||
-            (window.navigator as { standalone?: boolean }).standalone
-              ? "Y"
-              : "N";
-          const w = window.innerWidth;
-          const h = window.innerHeight;
-          const mobileQ = window.matchMedia(
-            "(max-width: 900px), (hover: none) and (pointer: coarse)",
-          ).matches
-            ? "Y"
-            : "N";
-          // Find Layout element to see what data-mobile actually resolved to
-          // by reading the data-* attribute directly off the DOM.
-          const layoutEl = document.querySelector("[data-mobile]");
-          const layoutMobile = layoutEl?.getAttribute("data-mobile") ?? "?";
-          const layoutSidebar = layoutEl?.getAttribute("data-sidebar") ?? "?";
-          el.textContent =
-            `T${top} R${right} B${bottom} L${left}\n` +
-            `${w}x${h} c${coarse} s${standalone} mq${mobileQ}\n` +
-            `dm:${layoutMobile} db:${layoutSidebar}`;
-        }}
-        style={{
-          "font-family": "ui-monospace, monospace",
-          "font-size": "7px",
-          "line-height": "1.2",
-          opacity: "0.35",
-          "text-align": "center",
-          color: "#E5A857",
-          padding: "0 2px 4px",
-          "white-space": "pre-line",
-        }}
-      />
     </ServerListBase>
   );
 };
