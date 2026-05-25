@@ -132,6 +132,32 @@ class Voice {
   async connect(channel: Channel, auth?: { url: string; token: string }) {
     this.disconnect();
 
+    // STELLIS: request mic permission in the SAME user-gesture context as
+    // the join click — Safari (16+) silently rejects getUserMedia after
+    // any async hop. Without this, snaiperlfc's Safari session connected
+    // to LiveKit fine (server saw "participant active") but never
+    // published a microphone track — chat looked "connected but dead".
+    // We immediately stop the probe tracks; LiveKit will reopen with its
+    // own getUserMedia call below, which Safari now allows because the
+    // permission is cached.
+    if (this.speakingPermission && this.#settings.micOn) {
+      try {
+        const probe = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            deviceId: this.#settings.preferredAudioInputDevice,
+            echoCancellation: this.#settings.echoCancellation,
+            noiseSuppression: this.#settings.noiseSupression === "browser",
+            autoGainControl: this.#settings.autoGainControl,
+          },
+        });
+        probe.getTracks().forEach((t) => t.stop());
+      } catch (e) {
+        // Don't abort the whole connect — user can grant permission later
+        // via UI mute button. Surface as a non-blocking error.
+        if ((e as Error).name !== "NotAllowedError") this.onErr(e);
+      }
+    }
+
     const room = new Room({
       audioCaptureDefaults: {
         deviceId: this.#settings.preferredAudioInputDevice,
@@ -181,6 +207,14 @@ class Voice {
                 }),
               );
             }
+          })
+          // STELLIS: previously this .then chain had no .catch, so any
+          // mic-enable failure (permission denied, no device, Safari
+          // user-gesture lost) was swallowed. Now we surface it.
+          .catch((err) => {
+            console.error("[voice] setMicrophoneEnabled failed:", err);
+            this.#settings.micOn = false;
+            if ((err as Error).name !== "NotAllowedError") this.onErr(err);
           });
     };
 
