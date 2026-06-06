@@ -70,17 +70,42 @@ export default function FlowJoinInvite() {
 
   /** Generate a username-safe slug for the auto-email. */
   function slug(name: string) {
-    const s = name
-      .toLowerCase()
+    // Apply the same Cyrillic→Latin translit so "Бабушка Аня" → "babushka-anya"
+    // rather than a meaningless "guest-..." that grandma can't even relate to
+    // her account. Hyphen-separated to keep email tokens readable in admin panel.
+    const s = translit(name)
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
     return s.length > 0 ? s : "guest";
   }
 
+  /*
+   * STELLIS: Cyrillic transliteration table. Stoat usernames must match
+   * [A-Za-z0-9_]{2,32}; the display name (set separately below) carries
+   * the original Cyrillic. Без транслитерации "Бабушка Аня" → user_xxxx,
+   * имя в чате превращалось в мусор.
+   */
+  const CYRILLIC_TO_LATIN: Record<string, string> = {
+    а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "yo", ж: "zh",
+    з: "z", и: "i", й: "i", к: "k", л: "l", м: "m", н: "n", о: "o",
+    п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "h", ц: "ts",
+    ч: "ch", ш: "sh", щ: "sch", ъ: "", ы: "y", ь: "", э: "e", ю: "yu",
+    я: "ya",
+  };
+
+  function translit(input: string): string {
+    return Array.from(input.toLowerCase())
+      .map((ch) => CYRILLIC_TO_LATIN[ch] ?? ch)
+      .join("");
+  }
+
   /** Convert a display name to a Stoat-compatible username (>=2, [A-Za-z0-9_]). */
   function toUsername(name: string) {
-    let u = name.replace(/[^A-Za-z0-9_]/g, "_").replace(/_+/g, "_");
-    u = u.replace(/^_+|_+$/g, "");
+    const trimmed = name.trim();
+    let u = translit(trimmed)
+      .replace(/[^A-Za-z0-9_]/g, "_")
+      .replace(/_+/g, "_")
+      .replace(/^_+|_+$/g, "");
     if (u.length < 2) u = `user_${Math.random().toString(36).slice(2, 6)}`;
     if (u.length > 32) u = u.slice(0, 32);
     return u;
@@ -201,6 +226,34 @@ export default function FlowJoinInvite() {
         );
       } catch {
         // ignore — try accept anyway, hard reload covers any drift
+      }
+
+      /*
+       * STELLIS: set display_name to the original (Cyrillic-allowed) input.
+       * username is the login id and must be ASCII; display_name is free-form
+       * Unicode and is what other members see. Без этого бабушка появлялась
+       * в чате как "user_kpk0" вместо "Бабушка Аня".
+       */
+      try {
+        const me = getClient().user;
+        if (me) {
+          await me.edit({ display_name: name });
+        }
+      } catch (err) {
+        console.warn("display_name set failed", err);
+      }
+
+      /*
+       * STELLIS: cache the auto-generated email so a return-visit can log
+       * in without grandma having to remember it. FlowLogin reads
+       * "stellis-cached-email" on mount and pre-fills the field. Cleared
+       * automatically on Logout (Controller).
+       */
+      try {
+        localStorage.setItem("stellis-cached-email", email);
+        localStorage.setItem("stellis-cached-name", name);
+      } catch {
+        /* localStorage may be blocked in private mode */
       }
 
       let dest = { server: "", channel: "" };

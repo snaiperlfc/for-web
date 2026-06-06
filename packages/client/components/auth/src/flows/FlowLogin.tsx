@@ -1,4 +1,4 @@
-import { Match, Switch, createEffect } from "solid-js";
+import { Match, Switch, createEffect, onMount } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
 
@@ -28,6 +28,42 @@ export default function FlowLogin() {
   const state = useState();
   const modals = useModals();
   const { lifecycle, isLoggedIn, login, selectUsername } = useClientLifecycle();
+
+  /*
+   * STELLIS: on the login screen, pre-fill the email field from
+   * "stellis-cached-email" written by FlowJoinInvite. Auto-generated
+   * email addresses (xxx@invite.stellis.local) are impossible to
+   * remember; without this older relatives have no way back into
+   * their account after browser data is cleared.
+   * Use DOM injection (same pattern as the username auto-focus below)
+   * because Stoat's Form/Fields wraps the input several layers deep.
+   */
+  onMount(() => {
+    const cached = (() => {
+      try {
+        return localStorage.getItem("stellis-cached-email");
+      } catch {
+        return null;
+      }
+    })();
+    if (!cached) return;
+    const tryFill = () => {
+      const input = document.querySelector<HTMLInputElement>(
+        'input[name="email"]',
+      );
+      if (input && !input.value) {
+        input.value = cached;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        const pwd = document.querySelector<HTMLInputElement>(
+          'input[name="password"]',
+        );
+        pwd?.focus();
+        return true;
+      }
+      return false;
+    };
+    if (!tryFill()) setTimeout(tryFill, 80);
+  });
 
   /**
    * Log into account
