@@ -187,6 +187,19 @@ export function MessageComposition(props: Props) {
     stopTyping();
     props.onMessageSend?.();
 
+    /*
+     * STELLIS: tiny haptic on send — confirms the tap registered without
+     * blocking visuals. 8ms is barely perceptible but lands as a "click."
+     * Optional chaining guards desktops/iOS Safari (Apple disables the API
+     * silently — no error). Wrapped in try because some Android builds
+     * throw if the user has reduced-motion or vibration disabled.
+     */
+    try {
+      navigator.vibrate?.(8);
+    } catch {
+      /* noop */
+    }
+
     if (typeof useContent === "string") {
       const currentDraft = draft();
       if (
@@ -304,6 +317,29 @@ export function MessageComposition(props: Props) {
   }
 
   const searchSpace = useSearchSpace(() => props.channel, client);
+
+  /*
+   * STELLIS: force the inline Send button on touch devices regardless of the
+   * appearance:show_send_button setting. On phones the on-screen keyboard's
+   * "send/return" key is ambiguous — newer iOS shows a "return" arrow that
+   * inserts a newline; users (especially elderly) end up with a multi-line
+   * empty draft and no apparent way to send. A visible filled button removes
+   * the ambiguity. Desktop respects the user setting as before.
+   * matchMedia is safe at module/setup time — Solid signals not required;
+   * the orientation doesn't flip pointer:coarse so we can read once.
+   */
+  const isTouchDevice = (() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.matchMedia("(pointer: coarse)").matches;
+    } catch {
+      return false;
+    }
+  })();
+  const showSendButton = () =>
+    isTouchDevice ||
+    state.settings.getValue("appearance:show_send_button") ||
+    false;
 
   return (
     <>
@@ -447,11 +483,9 @@ export function MessageComposition(props: Props) {
         updateDraftSelection={(start, end) =>
           state.draft.setSelection(props.channel.id, start, end)
         }
-        hasActionsAppend={
-          state.settings.getValue("appearance:show_send_button") || false
-        }
+        hasActionsAppend={showSendButton()}
         actionsAppend={
-          <Show when={state.settings.getValue("appearance:show_send_button")}>
+          <Show when={showSendButton()}>
             <IconButton
               _compositionSendMessage
               size="sm"
@@ -459,6 +493,7 @@ export function MessageComposition(props: Props) {
               shape="square"
               isDisabled={!canSend()}
               onPress={sendMessage}
+              data-stellis-send-button
             >
               <Symbol fill={true}>send</Symbol>
             </IconButton>

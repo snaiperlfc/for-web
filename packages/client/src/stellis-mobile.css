@@ -519,3 +519,62 @@ body[data-stellis-call-fullscreen="true"]
     touch-action: manipulation;
   }
 }
+
+/* ============================================================
+   STELLIS PWA polish (touch-only) — bigger send button, larger
+   tap targets, gentle press feedback. Applies under (pointer:
+   coarse) so desktop with touchscreens stays unaffected only if
+   the user has a fine pointer. Targeted via data attributes so
+   we don't fight Panda atomic classes.
+   ============================================================ */
+@media (hover: none) and (pointer: coarse) {
+  /* The send button we forced visible in Composition.tsx. iOS HIG
+     minimum is 44×44; bump slightly past that so the round button
+     feels confident rather than barely-tappable. The IconButton is
+     the only filled affordance in the composer — make it pop. */
+  [data-stellis-send-button] {
+    min-width: 48px !important;
+    min-height: 48px !important;
+    width: 48px !important;
+    height: 48px !important;
+    margin-inline-start: 4px !important;
+    border-radius: 14px !important;
+  }
+  [data-stellis-send-button] [class*="Symbol"] {
+    font-size: 24px !important;
+  }
+  [data-stellis-send-button]:active {
+    transform: scale(0.92);
+    transition: transform 80ms ease-out;
+  }
+
+  /* Channel-list rows — make sure each row is at least 44px tall.
+     Stoat's row container uses a data-link wrapper; we floor the
+     interactive ancestor to the iOS tappable minimum without
+     overriding internal flex/gap. */
+  a[data-link*="/channel/"],
+  a[href*="/channel/"] {
+    min-height: 44px !important;
+  }
+  /* Server rail icons — already 56px (set above), so no change.
+     But press feedback wasn't obvious; add a tiny scale-down. */
+  div[class*="w_56px"][class*="h_56px"]:active {
+    transform: scale(0.94);
+    transition: transform 80ms ease-out;
+  }
+
+  /* Hamburger menu — already styled above but lacked a min tap
+     dimension on small (320px) viewports. */
+  [data-stellis-mobile-menu] {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  /* All clickable mdui icon buttons in the composer toolbar.
+     The IconButton wraps mdui icon-buttons; give the touch surface
+     a floor without growing the visible icon. */
+  div[class*="layout-height-message-box"] button {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
