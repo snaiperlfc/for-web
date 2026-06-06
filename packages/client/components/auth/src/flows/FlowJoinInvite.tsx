@@ -291,61 +291,84 @@ export default function FlowJoinInvite() {
           Заполните два поля — и вы в чате. Это всё, что нужно.
         </Text>
 
-        <form onSubmit={handleSubmit}>
-          <Column gap="lg">
-            <label>
-              <TextField
-                required
-                autoFocus
-                name="name"
-                label="Как вас зовут"
-                placeholder="Например, Бабушка Аня"
-                minlength={2}
-                maxlength={32}
-                autocomplete="nickname"
-              />
-            </label>
-            <label>
-              <TextField
-                required
-                name="password"
-                type="password"
-                label="Придумайте пароль"
-                placeholder="Минимум 8 символов"
-                minlength={8}
-                autocomplete="new-password"
-              />
-            </label>
-
-            <Show when={error()}>
-              <Text
-                style={{
-                  color: "var(--md-sys-color-error)",
-                  "font-size": "0.9em",
-                }}
-              >
-                {error()}
-              </Text>
-            </Show>
-
-            <Row justify>
-              <Button type="submit" disabled={busy()}>
-                {busy() ? "Создаём аккаунт…" : "Войти в чат"}
-              </Button>
-            </Row>
-
-            <Text
-              style={{
-                color: "var(--md-sys-color-on-surface-variant)",
-                "font-size": "0.85em",
-                "text-align": "center",
-              }}
+        {(() => {
+          let formRef: HTMLFormElement | undefined;
+          return (
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              id="stellis-join-invite-form"
             >
-              Запомните пароль — он понадобится при следующем входе. Имя можно
-              изменить позже в настройках.
-            </Text>
-          </Column>
-        </form>
+              <Column gap="lg">
+                <label>
+                  <TextField
+                    required
+                    autoFocus
+                    name="name"
+                    label="Как вас зовут"
+                    placeholder="Например, Бабушка Аня"
+                    minlength={2}
+                    maxlength={32}
+                    autocomplete="nickname"
+                  />
+                </label>
+                <label>
+                  <TextField
+                    required
+                    name="password"
+                    type="password"
+                    label="Придумайте пароль"
+                    placeholder="Минимум 8 символов"
+                    minlength={8}
+                    autocomplete="new-password"
+                  />
+                </label>
+
+                <Show when={error()}>
+                  <Text
+                    style={{
+                      color: "var(--md-sys-color-error)",
+                      "font-size": "0.9em",
+                    }}
+                  >
+                    {error()}
+                  </Text>
+                </Show>
+
+                <Row justify>
+                  {/* STELLIS: Stoat's <Button> doesn't whitelist type="submit"
+                      in its props, so we trigger the form submit manually via
+                      onPress + requestSubmit(). This survives whatever
+                      @solid-aria/button does with the native click handler. */}
+                  <Button
+                    disabled={busy()}
+                    onPress={() => {
+                      if (busy()) return;
+                      if (formRef?.checkValidity()) {
+                        formRef.requestSubmit();
+                      } else {
+                        formRef?.reportValidity();
+                      }
+                    }}
+                  >
+                    {busy() ? "Создаём аккаунт…" : "Войти в чат"}
+                  </Button>
+                </Row>
+
+                <Text
+                  style={{
+                    color: "var(--md-sys-color-on-surface-variant)",
+                    "font-size": "0.85em",
+                    "text-align": "center",
+                  }}
+                >
+                  Запомните пароль — он понадобится при следующем входе. Имя
+                  можно изменить позже в настройках.
+                </Text>
+              </Column>
+            </form>
+          );
+        })()}
       </Show>
 
       <Show when={!inviteError() && invite() && isLoggedIn()}>
