@@ -27,7 +27,7 @@ export function NotificationsWorker() {
   const navigate = useNavigate();
   const params = useSmartParams();
 
-  const { initNotifications } = useNotifications();
+  const { initNotifications, reaffirmPushSubscription } = useNotifications();
 
   /**
    * Handle incoming messages
@@ -235,6 +235,13 @@ export function NotificationsWorker() {
 
   onMount(() => {
     document.addEventListener("click", tryRequest);
+    /*
+     * STELLIS: re-affirm push subscription on every app launch when the
+     * user already opted in. Catches the "Apple invalidated the endpoint"
+     * silent failure mode that was killing iOS notifications after every
+     * PWA reinstall / iOS update.
+     */
+    reaffirmPushSubscription();
   });
 
   onCleanup(() => document.removeEventListener("click", tryRequest));

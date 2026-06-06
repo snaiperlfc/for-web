@@ -38,6 +38,27 @@ export function useNotifications() {
     return areNotificationsAllowed && !notificationPermissionGranted;
   };
 
+  /*
+   * STELLIS: re-affirm the push subscription on every mount when the user
+   * already opted in. Apple invalidates Safari Web Push endpoints on PWA
+   * update / OS update / explicit reinstall, but the client setting stays
+   * "allowed" so initNotifications used to early-return and we never
+   * re-subscribed. Result: iOS notifications silently stopped.
+   *
+   * setUpServiceWorkerSubscription is idempotent — uses getSubscription()
+   * first, falls back to subscribe() if Apple returned null, and POSTs the
+   * endpoint to /push/subscribe either way so the backend's session.
+   * subscription record is replaced with the live endpoint.
+   */
+  const reaffirmPushSubscription = async () => {
+    if (settings.pushNotificationsState !== "allowed") return;
+    try {
+      await setUpServiceWorkerSubscription(getClient());
+    } catch (e) {
+      console.warn("Stellis: push resubscribe failed", e);
+    }
+  };
+
   const initNotifications = async () => {
     if (
       settings.desktopNotificationsState === "default" ||
@@ -123,6 +144,7 @@ export function useNotifications() {
     toggleNotificationPermission,
     togglePushPermission,
     initNotifications,
+    reaffirmPushSubscription,
   };
 }
 
