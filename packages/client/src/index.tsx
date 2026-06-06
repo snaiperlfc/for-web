@@ -18,6 +18,7 @@ import FlowConfirmReset from "@revolt/auth/src/flows/FlowConfirmReset";
 import FlowCreate from "@revolt/auth/src/flows/FlowCreate";
 import FlowDeleteAccount from "@revolt/auth/src/flows/FlowDelete";
 import FlowHome from "@revolt/auth/src/flows/FlowHome";
+import FlowJoinInvite from "@revolt/auth/src/flows/FlowJoinInvite";
 import FlowLogin from "@revolt/auth/src/flows/FlowLogin";
 import FlowResend from "@revolt/auth/src/flows/FlowResend";
 import FlowReset from "@revolt/auth/src/flows/FlowReset";
@@ -157,6 +158,8 @@ render(
           <Route path="/check" component={FlowCheck} />
           <Route path="/create" component={FlowCreate} />
           <Route path="/create/:code" component={FlowCreate} />
+          {/* STELLIS: grandma-friendly invite redeem — single form (name + password) */}
+          <Route path="/join/:code" component={FlowJoinInvite} />
           <Route path="/auth" component={FlowLogin} />
           <Route path="/resend" component={FlowResend} />
           <Route path="/reset" component={FlowReset} />

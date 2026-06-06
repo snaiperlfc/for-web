@@ -141,7 +141,16 @@ const Interface = (props: { children: JSX.Element }) => {
             */}
             {(() => {
               if (!location.pathname.startsWith("/login")) {
-                queueMicrotask(() => window.location.replace("/login"));
+                /* STELLIS: invite links go straight into the simplified
+                   register-and-join screen so older relatives never see the
+                   generic auth landing. Everything else falls back to /login. */
+                const inviteMatch = location.pathname.match(
+                  /^\/invite\/([^/?#]+)/,
+                );
+                const target = inviteMatch
+                  ? `/login/join/${inviteMatch[1]}`
+                  : "/login";
+                queueMicrotask(() => window.location.replace(target));
               }
               return <CircularProgress />;
             })()}
