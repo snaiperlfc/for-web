@@ -181,6 +181,7 @@ export function ChannelHeader(props: Props) {
 
       <Show when={props.channel.type === "Group"}>
         <Button
+          data-stellis-header-action="add-group"
           variant="text"
           size="icon"
           onPress={() =>
@@ -226,6 +227,7 @@ export function ChannelHeader(props: Props) {
 
       <Show when={props.sidebarState && props.channel.type !== "SavedMessages"}>
         <IconButton
+          data-stellis-header-action="members"
           onPress={() => {
             if (props.sidebarState!().state === "default") {
               state.layout.toggleSectionState(

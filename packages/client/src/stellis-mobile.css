@@ -101,7 +101,9 @@
      Settings still accessible via full Settings modal. Pinned
      messages still accessible via long-press menu on a message. */
   button[data-stellis-header-action="settings"],
-  button[data-stellis-header-action="pins"] {
+  button[data-stellis-header-action="pins"],
+  button[data-stellis-header-action="members"],
+  [data-stellis-header-action="add-group"] {
     display: none !important;
   }
 
