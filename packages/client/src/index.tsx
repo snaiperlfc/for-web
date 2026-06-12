@@ -154,6 +154,25 @@ function MountContext(props: { children?: JSX.Element }) {
   );
 }
 
+// STELLIS: stale-deploy self-heal. After a deploy, rsync --delete removes the
+// old hashed chunks. If a client is still running an old index.html (e.g. an
+// iOS PWA whose service worker hasn't refreshed yet), its dynamic imports
+// 404 → blank black screen. Vite fires `vite:preloadError` on such a failure;
+// we reload ONCE (guarded against a loop) so the browser fetches the fresh
+// index.html + current chunks. This is the standard fix for "white/black
+// screen after deploy".
+if (typeof window !== "undefined") {
+  window.addEventListener("vite:preloadError", () => {
+    const KEY = "stellis-chunk-reload";
+    const last = Number(sessionStorage.getItem(KEY) ?? "0");
+    // Avoid an infinite reload loop if the chunk is genuinely unfetchable.
+    if (Date.now() - last > 15000) {
+      sessionStorage.setItem(KEY, String(Date.now()));
+      window.location.reload();
+    }
+  });
+}
+
 render(
   () => (
     <StateContext>
