@@ -118,6 +118,10 @@ export function Embed(props: { embed: MessageEmbed }) {
             muted={isGIF()}
             autoplay={isGIF()}
             controls={!isGIF()}
+            // STELLIS: keep autoplaying GIF embeds inline on iOS (otherwise
+            // they force-fullscreen on play).
+            attr:playsinline=""
+            attr:webkit-playsinline=""
             preload="metadata"
             // bypass proxy for known GIF providers
             src={isGIF() ? video()!.url : video()!.proxiedURL}

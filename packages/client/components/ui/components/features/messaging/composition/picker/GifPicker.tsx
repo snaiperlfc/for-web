@@ -280,6 +280,11 @@ const GifItem = (props: {
       loop
       autoplay
       muted
+      // STELLIS: iOS force-fullscreens any <video> that autoplays unless
+      // it's explicitly inline. Without these every GIF tile blew up to
+      // fullscreen on the phone and you couldn't tap to pick one.
+      attr:playsinline=""
+      attr:webkit-playsinline=""
       preload="auto"
       role="listitem"
       style={{
