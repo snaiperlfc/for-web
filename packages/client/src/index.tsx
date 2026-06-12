@@ -9,7 +9,11 @@ import { render } from "solid-js/web";
 import { attachDevtoolsOverlay } from "@solid-devtools/overlay";
 import { Navigate, Route, Router, useParams } from "@solidjs/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
-import "material-symbols";
+// STELLIS: subset Material Symbols (Outlined only, ~298 KB) instead of the
+// package's three ~3.6-4.9 MB variable fonts. Kills the "icon names show as
+// text" flash on mobile where the 3.6 MB font outran font-display:block.
+// See src/material-symbols-subset.css + scripts/subset-icons.sh.
+import "./material-symbols-subset.css";
 import "mdui/mdui.css";
 import { PublicBot, PublicChannelInvite } from "stoat.js";
 
