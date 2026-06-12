@@ -102,6 +102,25 @@ const Interface = (props: { children: JSX.Element }) => {
   // with an explicit hamburger (☰) button in the channel header (see
   // ChannelHeader.tsx, shown only on mobile via stellis-mobile.css).
 
+  // STELLIS mobile: close the nav pane when the user taps a navigation
+  // target (channel / home / friends / DM). The auto-collapse effect above
+  // only fires on a route CHANGE — tapping the channel you're already in
+  // (common: "take me back to chat") doesn't change the pathname, so the
+  // effect never runs and the user is stranded in nav view with no
+  // hamburger to escape (it lives in the hidden chat header). This
+  // delegated handler closes the sidebar on any nav-link tap regardless of
+  // whether the route actually changes.
+  const handleNavClick = (e: MouseEvent) => {
+    if (!isMobile() || !sidebarOpen()) return;
+    const target = e.target as HTMLElement | null;
+    const link = target?.closest?.(
+      'a[href*="/channel/"], a[href*="/server/"], a[href="/friends"], a[href="/app"]',
+    );
+    if (link) {
+      state.layout.setSectionState(LAYOUT_SECTIONS.PRIMARY_SIDEBAR, false, true);
+    }
+  };
+
   function isDisconnected() {
     return [
       State.Connecting,
@@ -162,6 +181,7 @@ const Interface = (props: { children: JSX.Element }) => {
               style={{ "flex-grow": 1, "min-height": 0 }}
               data-sidebar={sidebarOpen() ? "open" : "closed"}
               data-mobile={isMobile() ? "true" : "false"}
+              onClick={handleNavClick}
               onDragOver={(e) => {
                 if (e.dataTransfer) e.dataTransfer.dropEffect = "none";
               }}
