@@ -103,36 +103,16 @@ function Picker(
     middleware: [offset(5), flip(), shift()],
   });
 
-  // STELLIS: close only when the press is genuinely OUTSIDE the sheet.
-  // The old handler closed on ANY document mousedown and registered
-  // itself synchronously on mount, so on touch the very tap that opened
-  // the picker closed it again — hence "doesn't open on the first tap".
-  // pointerdown covers mouse + touch; the containment check lets you
-  // scroll/tap inside the sheet without dismissing it.
-  function onPointerDown(event: PointerEvent) {
-    const base = floating();
-    if (base && event.target instanceof Node && base.contains(event.target)) {
-      return;
-    }
+  function onMouseDown() {
     props.setShow();
   }
 
-  onMount(() => {
-    // Defer a tick so the opening tap finishes before the listener is live.
-    const id = setTimeout(
-      () => document.addEventListener("pointerdown", onPointerDown),
-      0,
-    );
-    onCleanup(() => {
-      clearTimeout(id);
-      document.removeEventListener("pointerdown", onPointerDown);
-    });
-  });
+  onMount(() => document.addEventListener("mousedown", onMouseDown));
+  onCleanup(() => document.removeEventListener("mousedown", onMouseDown));
 
   return (
     <Base
       ref={setFloating}
-      data-stellis-media-picker
       style={{
         position: position.strategy,
         top: `${position.y ?? 0}px`,
@@ -140,7 +120,7 @@ function Picker(
       }}
     >
       <Container>
-        <Row justify class="CompositionButton" data-stellis-picker-tabs>
+        <Row justify class="CompositionButton">
           <Button
             groupActive={props.show() === "gif"}
             onPress={() => props.setShow("gif")}

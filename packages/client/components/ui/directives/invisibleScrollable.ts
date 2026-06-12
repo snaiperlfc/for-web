@@ -31,11 +31,6 @@ const baseStyles = cva({
  * @param el Element
  * @param accessor Parameters
  */
-// STELLIS: true on phones/tablets (no hover, coarse pointer).
-const COARSE_POINTER =
-  typeof window !== "undefined" &&
-  window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-
 export function invisibleScrollable(
   el: HTMLDivElement,
   accessor: Accessor<JSX.Directives["invisibleScrollable"] & object>,
@@ -46,11 +41,5 @@ export function invisibleScrollable(
 
   if (props.class) {
     props.class.split(" ").forEach((cls) => el.classList.add(cls));
-  }
-
-  // STELLIS: clear `will-change: transform` on touch — it breaks native
-  // iOS touch scrolling of the overflow container. See scrollable.ts.
-  if (COARSE_POINTER) {
-    el.style.willChange = "auto";
   }
 }
