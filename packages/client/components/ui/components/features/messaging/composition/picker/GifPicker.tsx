@@ -1,4 +1,5 @@
 import {
+  For,
   Match,
   Suspense,
   Switch,
@@ -154,6 +155,19 @@ function Categories() {
     ] as CategoryItem[];
   });
 
+  // STELLIS: on phones the virtual list (absolute items + will-change)
+  // refused to scroll under iOS touch. Render a plain native-scroll CSS
+  // grid instead — iOS always scrolls a normal overflow container.
+  if (COMPACT) {
+    return (
+      <div data-stellis-gif-scroll data-stellis-gif-grid>
+        <For each={items()}>
+          {(item) => <CategoryItem style={{}} tabIndex={0} item={item} />}
+        </For>
+      </div>
+    );
+  }
+
   return (
     <div ref={targetElement} data-stellis-gif-scroll use:invisibleScrollable>
       <VirtualContainer
@@ -252,6 +266,16 @@ function GifSearch(props: { query: string }) {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   }));
+
+  if (COMPACT) {
+    return (
+      <div data-stellis-gif-scroll data-stellis-gif-grid>
+        <For each={search.data as GifResult[] | undefined}>
+          {(item) => <GifItem style={{}} tabIndex={0} item={item} />}
+        </For>
+      </div>
+    );
+  }
 
   return (
     <div ref={targetElement} data-stellis-gif-scroll use:invisibleScrollable>

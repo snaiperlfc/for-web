@@ -232,6 +232,28 @@
     will-change: auto !important;
     transform: none !important;
   }
+  /* Plan B: on phones the GIF list is a plain native-scroll CSS grid
+     (no virtual list, no absolute items, no will-change) — the only
+     layout iOS reliably touch-scrolls. The tiles still carry their
+     upstream inline width/height, so force them to fill the grid cell. */
+  [data-stellis-gif-grid] {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 4px !important;
+    align-content: start !important;
+    padding-inline: 4px !important;
+    padding-bottom: 8px !important;
+  }
+  [data-stellis-gif-grid] > * {
+    width: 100% !important;
+    height: 88px !important;
+    min-width: 0 !important;
+  }
+  [data-stellis-gif-grid] video {
+    width: 100% !important;
+    height: 88px !important;
+    object-fit: cover !important;
+  }
 
   /* Panda atomic typography overrides — the actual rule that bites.
      Channel titles, sidebar names, message timestamps etc. use
