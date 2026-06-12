@@ -1,7 +1,7 @@
 import { Match, Show, Switch } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import { css } from "styled-system/css";
+import { css, cva } from "styled-system/css";
 
 import { useClientLifecycle } from "@revolt/client";
 import { TransitionType } from "@revolt/client/Controller";
@@ -79,6 +79,21 @@ export default function FlowHome() {
                   </Button>
                 </Column>
               </a>
+              {/*
+                STELLIS: Yandex SSO. Full-page nav to the backend bridge
+                (/auth/yandex/start), not an SPA route. Existing members:
+                one tap, no password. New identities are invite-gated by
+                the bridge.
+              */}
+              <a
+                href="/auth/yandex/start"
+                style={{ "text-decoration": "none", "margin-top": "4px" }}
+              >
+                <button type="button" class={yandexButton()}>
+                  <span class={yandexBadge()}>Я</span>
+                  Войти через Яндекс
+                </button>
+              </a>
             </Column>
           </Column>
         </>
@@ -107,3 +122,38 @@ export default function FlowHome() {
     </Switch>
   );
 }
+
+const yandexButton = cva({
+  base: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    height: "40px",
+    borderRadius: "20px",
+    border: "none",
+    cursor: "pointer",
+    background: "#FC3F1D",
+    color: "#fff",
+    fontWeight: 600,
+    fontSize: "0.95em",
+    fontFamily: "inherit",
+    transition: "filter 120ms",
+    "&:active": { filter: "brightness(0.92)" },
+  },
+});
+
+const yandexBadge = cva({
+  base: {
+    width: "20px",
+    height: "20px",
+    borderRadius: "50%",
+    background: "#fff",
+    color: "#FC3F1D",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: 800,
+  },
+});

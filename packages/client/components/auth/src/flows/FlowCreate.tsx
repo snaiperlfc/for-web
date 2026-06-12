@@ -87,6 +87,53 @@ export default function FlowCreate() {
           </Button>
         </Row>
       </Form>
+      {/*
+        STELLIS: register via Yandex carrying the invite. The bridge creates
+        + links the account so the user never picks a password. Shown only
+        when an invite code is present (first-login policy).
+      */}
+      <Show when={code}>
+        <a
+          href={`/auth/yandex/start?invite=${encodeURIComponent(code ?? "")}`}
+          style={{ "text-decoration": "none", "margin-top": "10px", display: "block" }}
+        >
+          <button
+            type="button"
+            style={{
+              width: "100%",
+              display: "flex",
+              "align-items": "center",
+              "justify-content": "center",
+              gap: "8px",
+              height: "40px",
+              "border-radius": "20px",
+              border: "none",
+              cursor: "pointer",
+              background: "#FC3F1D",
+              color: "#fff",
+              "font-weight": "600",
+              "font-family": "inherit",
+            }}
+          >
+            <span
+              style={{
+                width: "20px",
+                height: "20px",
+                "border-radius": "50%",
+                background: "#fff",
+                color: "#FC3F1D",
+                display: "flex",
+                "align-items": "center",
+                "justify-content": "center",
+                "font-weight": "800",
+              }}
+            >
+              Я
+            </span>
+            Зарегистрироваться через Яндекс
+          </button>
+        </a>
+      </Show>
       {import.meta.env.DEV && (
         <div
           style={{
