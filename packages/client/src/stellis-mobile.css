@@ -109,6 +109,55 @@
 
   /* GIF picker stays visible on mobile (user wants it for PWA). */
 
+  /* ── Telegram-style composer ──────────────────────────────────────
+     Upstream packs +add / input / gif / emoji / send into a cramped row
+     where the input wraps to 2 lines on a phone. Make it feel like TG:
+     a comfortable rounded pill, the text input dominant, icons compact
+     and vertically centred, send button outside on the right. */
+  [data-stellis-composer] {
+    align-items: flex-end !important;
+    gap: 6px !important;
+    padding-inline: 8px !important;
+  }
+  [data-stellis-composer-pill] {
+    border-radius: 24px !important;
+    min-height: 46px !important;
+    align-items: center !important;
+    padding-inline-start: 6px !important;
+    padding-inline-end: 8px !important;
+    padding-block: 2px !important;
+    flex: 1 1 auto !important;
+  }
+  /* The text input takes all remaining width and gets comfortable
+     vertical room so a single line never wraps for layout reasons. */
+  [data-stellis-composer-pill] [contenteditable] {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    padding-block: 9px !important;
+    line-height: 1.3 !important;
+    max-height: 40dvh !important;
+  }
+  /* Inline icon columns (+add, gif, emoji): shrink to the glyph and
+     centre vertically instead of bottom-aligning. */
+  [data-stellis-composer-pill] [class*="InlineIcon"] {
+    align-items: center !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+  [data-stellis-composer-pill] button {
+    min-width: 36px !important;
+    min-height: 36px !important;
+  }
+  /* The send button (outside the pill) — round, prominent, matches TG. */
+  [data-stellis-composer] [data-stellis-send-button] {
+    align-self: center !important;
+    border-radius: 50% !important;
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+  }
+
   /* Panda atomic typography overrides — the actual rule that bites.
      Channel titles, sidebar names, message timestamps etc. use
      Panda's `fs_1rem` (= 16px) and friends. The previous selectors

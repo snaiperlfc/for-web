@@ -474,9 +474,13 @@ export function MessageComposition(props: Props) {
         placeholder={
           props.channel.type === "SavedMessages"
             ? t`Save to your notes`
-            : props.channel.type === "DirectMessage"
-              ? t`Message ${props.channel.recipient?.username}`
-              : t`Message ${props.channel.name}`
+            : // STELLIS: on phones use a short "Сообщение" placeholder — the
+              // full "Сообщение <channel>" wraps to two lines in the pill.
+              isTouchDevice
+              ? t`Message`
+              : props.channel.type === "DirectMessage"
+                ? t`Message ${props.channel.recipient?.username}`
+                : t`Message ${props.channel.name}`
         }
         sendingAllowed={props.channel.havePermission("SendMessage")}
         autoCompleteSearchSpace={searchSpace}

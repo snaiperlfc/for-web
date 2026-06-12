@@ -233,8 +233,8 @@ export function MessageBox(props: Props) {
   );
 
   return (
-    <Parent>
-      <Base hasActionsAppend={props.hasActionsAppend}>
+    <Parent data-stellis-composer>
+      <Base data-stellis-composer-pill hasActionsAppend={props.hasActionsAppend}>
         <Switch fallback={props.actionsStart}>
           <Match when={!props.sendingAllowed}>
             <InlineIcon size="wide">
