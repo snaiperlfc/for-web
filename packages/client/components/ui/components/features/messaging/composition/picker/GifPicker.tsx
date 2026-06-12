@@ -1,5 +1,6 @@
 import {
   Match,
+  Show,
   Suspense,
   Switch,
   createContext,
@@ -40,6 +41,22 @@ export function GifPicker() {
 
   return (
     <Stack>
+      {/* STELLIS: a category/search opens a result view with no way back —
+          show a "back to categories" button while a filter is active. */}
+      <Show when={filter()}>
+        <BackButton
+          role="button"
+          tabIndex={0}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+          }}
+          onClick={() => setFilter("")}
+        >
+          ← <Trans>Categories</Trans>
+        </BackButton>
+      </Show>
       <TextField
         autoFocus
         variant="filled"
@@ -50,7 +67,9 @@ export function GifPicker() {
           e.stopPropagation();
           e.stopImmediatePropagation();
         }}
-        onChange={(e) => setFilter(e.currentTarget.value)}
+        // STELLIS: search live as you type. Upstream used `onChange`, which
+        // on inputs only fires on blur/enter — so search "didn't work".
+        onInput={(e) => setFilter(e.currentTarget.value)}
       />
       <Suspense fallback={<CircularProgress />}>
         <Switch
@@ -74,6 +93,23 @@ const Stack = styled("div", {
     minHeight: 0,
     display: "flex",
     flexDirection: "column",
+  },
+});
+
+const BackButton = styled("div", {
+  base: {
+    flexShrink: 0,
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    padding: "6px 10px",
+    margin: "0 0 6px",
+    cursor: "pointer",
+    userSelect: "none",
+    fontWeight: 600,
+    borderRadius: "var(--borderRadius-md)",
+    color: "var(--md-sys-color-on-surface)",
+    background: "var(--md-sys-color-surface-container-high)",
   },
 });
 

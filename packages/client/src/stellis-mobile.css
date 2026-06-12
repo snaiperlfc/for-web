@@ -166,6 +166,13 @@
     display: none !important;
   }
 
+  /* The GIFs/Emoji tab switcher inside the picker is pointless on a
+     phone — emoji come from the system keyboard and the picker only
+     opens to GIFs. Hide just the tab row (no layout/scroll changes). */
+  [data-stellis-picker-tabs] {
+    display: none !important;
+  }
+
   /* Panda atomic typography overrides — the actual rule that bites.
      Channel titles, sidebar names, message timestamps etc. use
      Panda's `fs_1rem` (= 16px) and friends. The previous selectors
