@@ -3,6 +3,8 @@ import { JSX, Match, Show, Switch, createEffect, createSignal, onCleanup } from 
 import { Server } from "stoat.js";
 import { styled } from "styled-system/jsx";
 
+import { Symbol } from "@revolt/ui/components/utils/Symbol";
+
 import { ChannelContextMenu, ServerContextMenu } from "@revolt/app";
 import { MessageCache } from "@revolt/app/interface/channels/text/MessageCache";
 import { Titlebar } from "@revolt/app/interface/desktop/Titlebar";
@@ -10,7 +12,12 @@ import { useClient, useClientLifecycle } from "@revolt/client";
 import { State } from "@revolt/client/Controller";
 import { NotificationsWorker } from "@revolt/client/NotificationsWorker";
 import { useModals } from "@revolt/modal";
-import { Navigate, useBeforeLeave, useLocation } from "@revolt/routing";
+import {
+  Navigate,
+  useBeforeLeave,
+  useLocation,
+  useNavigate,
+} from "@revolt/routing";
 import { useState } from "@revolt/state";
 import { LAYOUT_SECTIONS } from "@revolt/state/stores/Layout";
 import { CircularProgress } from "@revolt/ui";
@@ -213,11 +220,120 @@ const Interface = (props: { children: JSX.Element }) => {
           </Match>
         </Switch>
 
+        {/*
+          STELLIS mobile: persistent bottom tab bar (Чаты / Друзья /
+          Настройки). Telegram-style — far more discoverable for
+          non-technical users than the hamburger + server rail. Hidden
+          inside a channel chat so the conversation stays full-screen
+          (the channel header's ☰ gets you back).
+        */}
+        <Show when={isMobile() && lifecycle.loadedOnce()}>
+          <MobileTabBar />
+        </Show>
+
         <NotificationsWorker />
       </div>
     </MessageCache>
   );
 };
+
+/**
+ * STELLIS mobile bottom tab bar — Чаты / Друзья / Настройки.
+ *
+ * The primary navigation on a phone. Hidden while viewing a channel chat
+ * so the conversation is full-screen (the header ☰ returns to the list).
+ * Routes to /settings are intercepted by Interface's useBeforeLeave and
+ * open the settings modal instead of navigating.
+ */
+function MobileTabBar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const onChannel = () =>
+    /\/channel\//.test(location.pathname) ||
+    /\/server\/[^/]+\/channel\//.test(location.pathname);
+
+  const tab = (
+    active: boolean,
+    icon: string,
+    label: string,
+    go: () => void,
+  ) => (
+    <TabButton
+      data-active={active ? "true" : "false"}
+      role="button"
+      tabIndex={0}
+      onClick={go}
+    >
+      <Symbol size={24} fill={active}>
+        {icon}
+      </Symbol>
+      <span>{label}</span>
+    </TabButton>
+  );
+
+  return (
+    <Show when={!onChannel()}>
+      <TabBar>
+        {tab(
+          location.pathname === "/app" || location.pathname === "/",
+          "forum",
+          "Чаты",
+          () => navigate("/app"),
+        )}
+        {tab(
+          location.pathname.startsWith("/friends"),
+          "group",
+          "Друзья",
+          () => navigate("/friends"),
+        )}
+        {tab(false, "settings", "Настройки", () => navigate("/settings"))}
+      </TabBar>
+    </Show>
+  );
+}
+
+const TabBar = styled("nav", {
+  base: {
+    position: "fixed",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 40,
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "stretch",
+    paddingBottom: "var(--stellis-safe-bottom, 0px)",
+    borderTop: "1px solid var(--md-sys-color-outline-variant)",
+    background: "var(--md-sys-color-surface-container)",
+  },
+});
+
+const TabButton = styled("div", {
+  base: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "2px",
+    paddingTop: "8px",
+    paddingBottom: "8px",
+    minHeight: "52px",
+    cursor: "pointer",
+    userSelect: "none",
+    fontSize: "11px",
+    fontWeight: 500,
+    color: "var(--md-sys-color-on-surface-variant)",
+    transition: "color var(--transitions-fast)",
+    '&[data-active="true"]': {
+      color: "var(--md-sys-color-primary)",
+    },
+    "&:active": {
+      background: "var(--md-sys-color-surface-container-high)",
+    },
+  },
+});
 
 /**
  * Parent container

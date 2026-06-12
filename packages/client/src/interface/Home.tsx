@@ -194,7 +194,6 @@ export function HomePage() {
           openCreate={() =>
             openModal({ type: "create_group_or_server", client: client()! })
           }
-          openSettings={() => openModal({ type: "settings", config: "user" })}
         />
       </Show>
     </Base>
@@ -205,10 +204,7 @@ export function HomePage() {
  * STELLIS: phone home screen — quick-jump directory of conversations
  * and channels. Reuses the same ordering helpers the sidebar uses.
  */
-function MobileQuickAccess(props: {
-  openCreate: () => void;
-  openSettings: () => void;
-}) {
+function MobileQuickAccess(props: { openCreate: () => void }) {
   const client = useClient();
   const state = useState();
 
@@ -267,9 +263,6 @@ function MobileQuickAccess(props: {
         <Button variant="tonal" onPress={props.openCreate}>
           + Создать сервер
         </Button>
-        <Button variant="text" onPress={props.openSettings}>
-          Настройки
-        </Button>
       </div>
     </div>
   );
@@ -281,7 +274,8 @@ const mobileWrap = cva({
     display: "flex",
     flexDirection: "column",
     gap: "2px",
-    padding: "8px 8px 24px",
+    // bottom padding clears the fixed mobile tab bar (~56px + safe area)
+    padding: "8px 8px calc(72px + var(--stellis-safe-bottom, 0px))",
     overflowY: "auto",
   },
 });
