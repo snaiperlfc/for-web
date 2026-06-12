@@ -173,6 +173,22 @@ if (typeof window !== "undefined") {
   });
 }
 
+// STELLIS: restore the last channel on PWA cold start. The manifest
+// start_url is /pwa (→ PWARedirect → getLastActivePath), but iOS PWAs
+// installed earlier won't pick up the new manifest until re-added. Bridge
+// it at runtime: when launched as a standalone PWA on the root path,
+// rewrite to /pwa BEFORE the router initialises. Runs once per page load
+// (cold start) — in-app navigation to home is unaffected. No effect in a
+// normal browser tab (not standalone).
+if (typeof window !== "undefined") {
+  const isStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator as { standalone?: boolean }).standalone === true;
+  if (isStandalone && window.location.pathname === "/") {
+    window.history.replaceState(null, "", "/pwa");
+  }
+}
+
 render(
   () => (
     <StateContext>

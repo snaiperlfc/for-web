@@ -58,7 +58,10 @@ export default defineConfig({
         short_name: "Stellis",
         description: "Личное небо. По приглашениям.",
         categories: ["productivity", "personalization"],
-        start_url: base,
+        // STELLIS: launch the PWA at /pwa, which redirects to the last
+        // active channel/conversation (PWARedirect → getLastActivePath).
+        // Without this the app cold-starts on the home page every time.
+        start_url: `${base}pwa`,
         orientation: "portrait",
         display_override: ["window-controls-overlay"],
         display: "standalone",
