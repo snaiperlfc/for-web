@@ -17,7 +17,7 @@ export function VoiceCallCardActions(props: { size: "xs" | "sm" }) {
   }
 
   return (
-    <Actions>
+    <Actions data-stellis-call-actions>
       <Show when={props.size === "xs"}>
         <a href={voice.channel()?.path}>
           <IconButton variant="standard" size={props.size}>

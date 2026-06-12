@@ -441,6 +441,38 @@
     padding: 0 !important;
     height: 100% !important;
   }
+
+  /* In-call control row fits the phone width. Upstream wraps the
+     actions bar (mic / deafen / camera / screenshare / hangup)
+     between two flex:1 holders (status text + fullscreen button)
+     that squeeze it until buttons overflow off-screen. On mobile:
+     - holders shrink to content (flex:0) so they stop stealing width
+     - the row can wrap and centers
+     - the actions bar shrinks + tightens its gap so all 5 buttons
+       fit on a 360px screen */
+  [data-stellis-call-controls] {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    padding: 6px !important;
+  }
+  [data-stellis-call-holder] {
+    flex: 0 0 auto !important;
+    padding: 0 !important;
+  }
+  [data-stellis-call-actions] {
+    gap: 6px !important;
+    padding: 6px 8px !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+  /* Status line (who's talking) goes full-width above the buttons
+     instead of competing for horizontal space. */
+  [data-stellis-call-holder][class*="left"] {
+    flex-basis: 100% !important;
+    justify-content: center !important;
+    order: 2 !important;
+  }
 }
 
 /* ============================================================

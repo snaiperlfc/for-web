@@ -20,12 +20,12 @@ export function VoiceCallCardActiveRoom() {
   return (
     <View>
       <Participants />
-      <VoiceCallControls>
-        <VoiceCallControlHolder right>
+      <VoiceCallControls data-stellis-call-controls>
+        <VoiceCallControlHolder right data-stellis-call-holder>
           <VoiceCallFullscreen />
         </VoiceCallControlHolder>
         <VoiceCallCardActions size="sm" />
-        <VoiceCallControlHolder left overflow>
+        <VoiceCallControlHolder left overflow data-stellis-call-holder>
           <VoiceCallCardStatus />
         </VoiceCallControlHolder>
       </VoiceCallControls>
