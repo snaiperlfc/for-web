@@ -20,6 +20,7 @@ import { useModals } from "@revolt/modal";
 import {
   Avatar,
   Badge,
+  Button,
   Deferred,
   Header,
   IconButton,
@@ -35,6 +36,20 @@ import {
 import { Symbol } from "@revolt/ui/components/utils/Symbol";
 
 import { HeaderIcon } from "./common/CommonHeader";
+
+/**
+ * STELLIS: phone-sized / touch screen check (matchMedia read once).
+ */
+const isMobileFriends = (() => {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.matchMedia(
+      "(max-width: 900px), (hover: none) and (pointer: coarse)",
+    ).matches;
+  } catch {
+    return false;
+  }
+})();
 
 /**
  * Base layout of the friends page
@@ -112,6 +127,30 @@ export function Friends() {
       </Header>
 
       <main class={main()}>
+        {/*
+          STELLIS mobile: a big, obvious "Добавить друга" button. The
+          desktop add-friend is a tiny unlabelled "+" icon in the rail —
+          users (esp. parents) couldn't find it ("друзей сложно
+          добавить"). This opens the same add_friend dialog.
+        */}
+        <Show when={isMobileFriends}>
+          <div
+            style={{
+              padding: "10px 12px",
+              "border-bottom":
+                "1px solid var(--md-sys-color-outline-variant)",
+            }}
+          >
+            <Button
+              variant="filled"
+              onPress={() =>
+                openModal({ type: "add_friend", client: client() })
+              }
+            >
+              <Symbol size={20}>person_add</Symbol>&nbsp;Добавить друга
+            </Button>
+          </div>
+        </Show>
         <div
           style={{
             position: "relative",
@@ -119,26 +158,30 @@ export function Friends() {
           }}
         >
           <NavigationRail contained value={page} onValue={setPage}>
-            <div style={{ "margin-top": "6px", "margin-bottom": "12px" }}>
-              <IconButton
-                variant="filled"
-                shape="square"
-                onPress={() =>
-                  openModal({
-                    type: "add_friend",
-                    client: client(),
-                  })
-                }
-                use:floating={{
-                  tooltip: {
-                    placement: "right",
-                    content: t`Add a new friend`,
-                  },
-                }}
-              >
-                <Symbol>add</Symbol>
-              </IconButton>
-            </div>
+            {/* Desktop: the small "+" add-friend. On mobile the prominent
+                "Добавить друга" button above replaces it. */}
+            <Show when={!isMobileFriends}>
+              <div style={{ "margin-top": "6px", "margin-bottom": "12px" }}>
+                <IconButton
+                  variant="filled"
+                  shape="square"
+                  onPress={() =>
+                    openModal({
+                      type: "add_friend",
+                      client: client(),
+                    })
+                  }
+                  use:floating={{
+                    tooltip: {
+                      placement: "right",
+                      content: t`Add a new friend`,
+                    },
+                  }}
+                >
+                  <Symbol>add</Symbol>
+                </IconButton>
+              </div>
+            </Show>
 
             <NavigationRailItem
               icon={<Symbol>waving_hand</Symbol>}

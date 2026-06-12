@@ -33,7 +33,7 @@ image photo attach_file reply delete content_copy star favorite favorite_border 
 visibility visibility_off lock lock_open logout login refresh sync schedule today \
 volume_up volume_off volume_mute do_not_disturb_on circle radio_button_unchecked \
 radio_button_checked dark_mode light_mode palette language shield manage_accounts \
-account_circle add_reaction push_pin keep menu arrow_drop_down arrow_drop_up hub \
+account_circle add_reaction push_pin keep person_add group_add person_remove menu arrow_drop_down arrow_drop_up hub \
 forum tune sentiment_satisfied mood campaign verified key vpn_key \
 admin_panel_settings dns terminal bug_report"
 
