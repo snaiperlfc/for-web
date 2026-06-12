@@ -60,6 +60,28 @@ function extractGiphyMedia(content: string | undefined | null): string[] {
   return [...ids].map((id) => `https://media.giphy.com/media/${id}/giphy.mp4`);
 }
 
+/**
+ * STELLIS: a Giphy GIF special embed that january couldn't populate.
+ *
+ * january can't reach giphy.com from the RU VPS, so it emits a
+ * `Special: { type: "GIF" }` embed (no id field even exists on GIF) with no
+ * .image / .video media. The default render path then bottoms out at an
+ * <iframe src={embedURL}>, but embedURL has no GIF case → empty box.
+ *
+ * We detect that shape so the renderer can (a) skip the broken embed and
+ * (b) fall back to the inline media.giphy.com video synthesized from the
+ * message content (which still holds the original giphy URL).
+ */
+function isBrokenGiphyEmbed(embed: unknown): boolean {
+  const e = embed as WebsiteEmbed;
+  return (
+    e?.type === "Website" &&
+    e.specialContent?.type === "GIF" &&
+    !e.image?.url &&
+    !e.video?.url
+  );
+}
+
 interface Props {
   /**
    * Message
@@ -344,27 +366,35 @@ export function Message(props: Props) {
         </For>
       </Show>
       <Show when={props.message.embeds}>
-        <For each={props.message.embeds}>
+        {/*
+          STELLIS: skip broken Giphy GIF embeds (january couldn't populate
+          media → would render an empty iframe box). The inline preview
+          below renders them from the message content instead.
+        */}
+        <For each={props.message.embeds!.filter((e) => !isBrokenGiphyEmbed(e))}>
           {(embed) => <Embed embed={embed} />}
         </For>
       </Show>
       {/*
         STELLIS: Giphy inline preview. Stoat's backend embed worker can't
-        scrape giphy.com from a RU VPS (RKN/Fastly geoblock), so
-        message.embeds for Giphy links is always empty. media.giphy.com IS
-        reachable though — we extract the GIF ID from the URL and render
-        the inline mp4 directly. No backend dependency, works for any
-        message containing a Giphy URL.
+        scrape giphy.com from a RU VPS (RKN/Fastly geoblock), so for Giphy
+        links it either leaves message.embeds empty OR emits a broken GIF
+        special embed (see isBrokenGiphyEmbed). media.giphy.com IS reachable
+        though — we extract the GIF ID from the message content and render
+        the inline mp4 directly. No backend dependency.
 
-        We only synthesize a preview when there's no upstream embed for
-        the same URL (otherwise we'd double-render).
+        Fire whenever the content has a Giphy URL UNLESS an embed already
+        renders that GIF with real media (a properly-scraped one) — in which
+        case <Embed> shows it and we'd double-render.
       */}
       <Show
         when={
+          extractGiphyMedia(props.message.content).length > 0 &&
           !props.message.embeds?.some(
             (e) =>
               e.type === "Website" &&
-              (e as WebsiteEmbed).originalUrl?.includes("giphy.com"),
+              (e as WebsiteEmbed).specialContent?.type === "GIF" &&
+              !isBrokenGiphyEmbed(e),
           )
         }
       >
