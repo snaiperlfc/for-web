@@ -6,6 +6,8 @@ import {
   createContext,
   createMemo,
   createSignal,
+  onCleanup,
+  onMount,
   useContext,
 } from "solid-js";
 
@@ -268,9 +270,11 @@ function GifSearch(props: { query: string }) {
   }));
 
   if (COMPACT) {
+    // Cap the rendered tiles — a family picker doesn't need hundreds of
+    // <video> elements on a phone, and it keeps the DOM light.
     return (
       <div data-stellis-gif-scroll data-stellis-gif-grid>
-        <For each={search.data as GifResult[] | undefined}>
+        <For each={((search.data as GifResult[] | undefined) ?? []).slice(0, 48)}>
           {(item) => <GifItem style={{}} tabIndex={0} item={item} />}
         </For>
       </div>
@@ -300,17 +304,41 @@ const GifItem = (props: {
 }) => {
   const { onMessage } = useContext(CompositionMediaPickerContext);
 
+  let el: HTMLVideoElement | undefined;
+
+  // STELLIS: the mobile grid renders ALL tiles at once (no virtual list),
+  // so autoplaying every <video> decoded dozens of clips simultaneously
+  // and froze the whole app. Play only what's actually on screen and
+  // pause the rest — keeps ~a row or two decoding at a time.
+  onMount(() => {
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            el!.play().catch(() => {});
+          } else {
+            el!.pause();
+          }
+        }
+      },
+      { threshold: 0.1, rootMargin: "100px 0px" },
+    );
+    io.observe(el);
+    onCleanup(() => io.disconnect());
+  });
+
   return (
     <Gif
+      ref={el}
       loop
-      autoplay
       muted
-      // STELLIS: iOS force-fullscreens any <video> that autoplays unless
-      // it's explicitly inline. Without these every GIF tile blew up to
+      // STELLIS: iOS force-fullscreens any <video> that plays unless it's
+      // explicitly inline. Without these every GIF tile blew up to
       // fullscreen on the phone and you couldn't tap to pick one.
       attr:playsinline=""
       attr:webkit-playsinline=""
-      preload="auto"
+      preload="metadata"
       role="listitem"
       style={{
         ...(props.style as object),
