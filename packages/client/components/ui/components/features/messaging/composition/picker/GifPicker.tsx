@@ -54,6 +54,7 @@ export function GifPicker() {
       <TextField
         autoFocus
         variant="filled"
+        data-stellis-gif-search
         placeholder={t`Search for GIFs...`}
         value={filter()}
         onMouseDown={(e) => {

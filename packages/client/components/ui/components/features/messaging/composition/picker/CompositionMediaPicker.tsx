@@ -121,7 +121,7 @@ function Picker(
       }}
     >
       <Container>
-        <Row justify class="CompositionButton">
+        <Row justify class="CompositionButton" data-stellis-picker-tabs>
           <Button
             groupActive={props.show() === "gif"}
             onPress={() => props.setShow("gif")}
