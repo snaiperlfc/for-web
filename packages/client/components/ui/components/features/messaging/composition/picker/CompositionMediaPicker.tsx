@@ -103,12 +103,34 @@ function Picker(
     middleware: [offset(5), flip(), shift()],
   });
 
-  function onMouseDown() {
+  // STELLIS: close only when the press is genuinely OUTSIDE the panel.
+  // Upstream closed on ANY document mousedown and registered the listener
+  // synchronously on mount, so on touch the very tap that opened the picker
+  // closed it again — it only opened on the second tap. pointerdown covers
+  // mouse + touch; skip presses inside the panel (so you can scroll/tap
+  // GIFs) and on the composer's gif/emoji trigger (so its own onClick can
+  // toggle the panel instead of fighting this close).
+  function onPointerDown(event: PointerEvent) {
+    const target = event.target;
+    if (target instanceof Element) {
+      const base = floating();
+      if (base && base.contains(target)) return;
+      if (target.closest("[data-stellis-compose-action]")) return;
+    }
     props.setShow();
   }
 
-  onMount(() => document.addEventListener("mousedown", onMouseDown));
-  onCleanup(() => document.removeEventListener("mousedown", onMouseDown));
+  onMount(() => {
+    // Defer a tick so the opening tap finishes before the listener is live.
+    const id = setTimeout(
+      () => document.addEventListener("pointerdown", onPointerDown),
+      0,
+    );
+    onCleanup(() => {
+      clearTimeout(id);
+      document.removeEventListener("pointerdown", onPointerDown);
+    });
+  });
 
   return (
     <Base
