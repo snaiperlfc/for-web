@@ -398,6 +398,49 @@
     div[data-stellis-call-card] {
     display: none !important;
   }
+
+  /* STELLIS: auto-fullscreen the ACTIVE voice call on mobile.
+     Desktop shows a 40vh card-in-chat; on a phone that's a cramped
+     sliver. Every mobile chat app (Discord, Telegram) gives an
+     active call the whole screen. We detect the active card via
+     :has([active_true]) and lift it to the full viewport WITHOUT
+     depending on the fullscreen button / signal (which was
+     unreliable on iOS — requestFullscreen doesn't work on divs and
+     the Portal's pointer-events:none killed the toggle). This makes
+     "open voice fullscreen on mobile" the default, no tap needed.
+
+     Scoped to the "fixed" state (you're viewing the voice channel);
+     the floating PiP stays hidden. Does NOT override the hide rule
+     above (no `display`), so navigating away still hides it. */
+  div[data-stellis-call-card="fixed"]:has([class*="active_true"]) {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    transform: none !important;
+    max-width: none !important;
+    z-index: 90 !important;
+    pointer-events: auto !important;
+    padding-top: var(--stellis-safe-top, 0) !important;
+    padding-bottom: var(--stellis-safe-bottom, 0) !important;
+    padding-left: var(--stellis-safe-left, 0) !important;
+    padding-right: var(--stellis-safe-right, 0) !important;
+    background: var(--md-sys-color-surface);
+  }
+  div[data-stellis-call-card="fixed"]:has([class*="active_true"])
+    [class*="Card"] {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+  }
+  div[data-stellis-call-card="fixed"]:has([class*="active_true"])
+    [class*="Base"] {
+    position: relative !important;
+    top: 0 !important;
+    padding: 0 !important;
+    height: 100% !important;
+  }
 }
 
 /* ============================================================
