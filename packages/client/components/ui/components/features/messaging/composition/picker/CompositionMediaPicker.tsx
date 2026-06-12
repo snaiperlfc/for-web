@@ -113,6 +113,7 @@ function Picker(
   return (
     <Base
       ref={setFloating}
+      data-stellis-media-picker
       style={{
         position: position.strategy,
         top: `${position.y ?? 0}px`,

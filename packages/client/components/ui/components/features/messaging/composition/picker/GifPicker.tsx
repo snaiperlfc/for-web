@@ -32,6 +32,17 @@ type GifResult = {
 
 const FilterContext = createContext<(value: string) => void>();
 
+// STELLIS: on phones the 200×120 tiles only fit one per row inside the
+// (now full-width) bottom-sheet picker, so each GIF looked huge and the
+// list felt "fullscreen". Use smaller tiles so 3 fit per row and the
+// picker is easy to browse. itemSize MUST match the rendered tile width
+// or the virtual list mispositions items.
+const COMPACT = typeof window !== "undefined" &&
+  window.matchMedia("(max-width: 900px), (hover: none) and (pointer: coarse)").matches;
+const TILE = COMPACT
+  ? { height: 84, width: 112 }
+  : { height: 120, width: 200 };
+
 export function GifPicker() {
   const { t } = useLingui();
   const [filter, setFilter] = createSignal("");
@@ -147,7 +158,7 @@ function Categories() {
       <VirtualContainer
         items={items()}
         scrollTarget={targetElement}
-        itemSize={{ height: 120, width: 200 }}
+        itemSize={TILE}
         crossAxisCount={(measurements) =>
           Math.floor(measurements.container.cross / measurements.itemSize.cross)
         }
@@ -169,6 +180,8 @@ const CategoryItem = (props: {
     <Category
       style={{
         ...(props.style as object),
+        width: `${TILE.width}px`,
+        height: `${TILE.height}px`,
         "background-image": `linear-gradient(to right, #0006, #0006), url("${props.item.t === 0 ? props.item.category.image : props.item.gif?.url}")`,
       }}
       tabIndex={props.tabIndex}
@@ -244,7 +257,7 @@ function GifSearch(props: { query: string }) {
       <VirtualContainer
         items={search.data as never /* resource */}
         scrollTarget={targetElement}
-        itemSize={{ height: 120, width: 200 }}
+        itemSize={TILE}
         crossAxisCount={(measurements) =>
           Math.floor(measurements.container.cross / measurements.itemSize.cross)
         }
@@ -269,7 +282,11 @@ const GifItem = (props: {
       muted
       preload="auto"
       role="listitem"
-      style={props.style as string}
+      style={{
+        ...(props.style as object),
+        width: `${TILE.width}px`,
+        height: `${TILE.height}px`,
+      }}
       tabIndex={props.tabIndex}
       src={props.item.media_formats.tinywebm.url}
       onClick={() => onMessage(props.item.url)}

@@ -158,6 +158,25 @@
     min-height: 46px !important;
   }
 
+  /* ── GIF / emoji picker as a bottom sheet ─────────────────────────
+     Upstream renders the picker as a fixed 400×400 floating popover
+     anchored to the tiny gif button. On a phone it overflows the
+     viewport and the GIFs felt fullscreen. Pin it to the bottom above
+     the composer, full width, fixed height, so it reads like a
+     Telegram sticker/GIF sheet. (Portaled to #floating, so this is a
+     plain global selector inside the mobile media query.) */
+  [data-stellis-media-picker] {
+    position: fixed !important;
+    left: 6px !important;
+    right: 6px !important;
+    top: auto !important;
+    bottom: calc(72px + var(--stellis-safe-bottom, 0px)) !important;
+    width: auto !important;
+    height: 52dvh !important;
+    max-height: 52dvh !important;
+    z-index: 200 !important;
+  }
+
   /* Panda atomic typography overrides — the actual rule that bites.
      Channel titles, sidebar names, message timestamps etc. use
      Panda's `fs_1rem` (= 16px) and friends. The previous selectors
