@@ -427,8 +427,10 @@ export function MessageComposition(props: Props) {
           <Switch fallback={<MessageBox.InlineIcon size="short" />}>
             <Match when={props.channel.havePermission("UploadFiles")}>
               <MessageBox.InlineIcon size="wide">
+                {/* STELLIS: a paperclip reads as "attach a file" far more
+                    clearly than a bare "+" (Telegram-style). */}
                 <IconButton onPress={addFile}>
-                  <Symbol>add</Symbol>
+                  <Symbol>attach_file</Symbol>
                 </IconButton>
               </MessageBox.InlineIcon>
             </Match>
