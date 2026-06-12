@@ -91,6 +91,22 @@ export default function FlowLogin() {
   async function select(data: FormData) {
     const username = data.get("username") as string;
     await selectUsername(username);
+
+    // STELLIS: hard-reload into the app after onboarding completes.
+    //
+    // selectUsername() POSTs /onboard/complete then fires the
+    // Onboarding → Connecting → Connected state transition, relying on a
+    // fresh websocket connect for the just-created session. That connect is
+    // flaky right after onboarding — when it doesn't reach Connected the
+    // in-app shell never mounts and Interface bounces the user to /login,
+    // forcing a confusing manual re-login (every new invited relative hit
+    // this). The server-side onboarding already succeeded (the session is
+    // valid — re-login proves it), so a real navigation re-bootstraps
+    // cleanly with the cached session, same as the post-login path below.
+    if (typeof window !== "undefined") {
+      const next = state.layout.popNextPath() ?? "/app";
+      window.location.replace(next);
+    }
   }
 
   return (
