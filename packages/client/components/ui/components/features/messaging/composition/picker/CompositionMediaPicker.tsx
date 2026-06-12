@@ -103,12 +103,31 @@ function Picker(
     middleware: [offset(5), flip(), shift()],
   });
 
-  function onMouseDown() {
+  // STELLIS: close only when the press is genuinely OUTSIDE the sheet.
+  // The old handler closed on ANY document mousedown and registered
+  // itself synchronously on mount, so on touch the very tap that opened
+  // the picker closed it again — hence "doesn't open on the first tap".
+  // pointerdown covers mouse + touch; the containment check lets you
+  // scroll/tap inside the sheet without dismissing it.
+  function onPointerDown(event: PointerEvent) {
+    const base = floating();
+    if (base && event.target instanceof Node && base.contains(event.target)) {
+      return;
+    }
     props.setShow();
   }
 
-  onMount(() => document.addEventListener("mousedown", onMouseDown));
-  onCleanup(() => document.removeEventListener("mousedown", onMouseDown));
+  onMount(() => {
+    // Defer a tick so the opening tap finishes before the listener is live.
+    const id = setTimeout(
+      () => document.addEventListener("pointerdown", onPointerDown),
+      0,
+    );
+    onCleanup(() => {
+      clearTimeout(id);
+      document.removeEventListener("pointerdown", onPointerDown);
+    });
+  });
 
   return (
     <Base
