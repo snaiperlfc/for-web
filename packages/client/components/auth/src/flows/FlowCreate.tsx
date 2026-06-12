@@ -93,46 +93,47 @@ export default function FlowCreate() {
         when an invite code is present (first-login policy).
       */}
       <Show when={code}>
-        <a
-          href={`/auth/yandex/start?invite=${encodeURIComponent(code ?? "")}`}
-          style={{ "text-decoration": "none", "margin-top": "10px", display: "block" }}
+        <button
+          type="button"
+          onClick={() =>
+            window.location.assign(
+              `/auth/yandex/start?invite=${encodeURIComponent(code ?? "")}`,
+            )
+          }
+          style={{
+            width: "100%",
+            "margin-top": "10px",
+            display: "flex",
+            "align-items": "center",
+            "justify-content": "center",
+            gap: "8px",
+            height: "40px",
+            "border-radius": "20px",
+            border: "none",
+            cursor: "pointer",
+            background: "#FC3F1D",
+            color: "#fff",
+            "font-weight": "600",
+            "font-family": "inherit",
+          }}
         >
-          <button
-            type="button"
+          <span
             style={{
-              width: "100%",
+              width: "20px",
+              height: "20px",
+              "border-radius": "50%",
+              background: "#fff",
+              color: "#FC3F1D",
               display: "flex",
               "align-items": "center",
               "justify-content": "center",
-              gap: "8px",
-              height: "40px",
-              "border-radius": "20px",
-              border: "none",
-              cursor: "pointer",
-              background: "#FC3F1D",
-              color: "#fff",
-              "font-weight": "600",
-              "font-family": "inherit",
+              "font-weight": "800",
             }}
           >
-            <span
-              style={{
-                width: "20px",
-                height: "20px",
-                "border-radius": "50%",
-                background: "#fff",
-                color: "#FC3F1D",
-                display: "flex",
-                "align-items": "center",
-                "justify-content": "center",
-                "font-weight": "800",
-              }}
-            >
-              Я
-            </span>
-            Зарегистрироваться через Яндекс
-          </button>
-        </a>
+            Я
+          </span>
+          Зарегистрироваться через Яндекс
+        </button>
       </Show>
       {import.meta.env.DEV && (
         <div

@@ -80,20 +80,20 @@ export default function FlowHome() {
                 </Column>
               </a>
               {/*
-                STELLIS: Yandex SSO. Full-page nav to the backend bridge
-                (/auth/yandex/start), not an SPA route. Existing members:
-                one tap, no password. New identities are invite-gated by
-                the bridge.
+                STELLIS: Yandex SSO. MUST be a real navigation to the backend
+                bridge (/auth/yandex/start) — a plain <a> gets intercepted by
+                Solid Router as an internal SPA route and silently does
+                nothing. window.location forces a full page load.
               */}
-              <a
-                href="/auth/yandex/start"
-                style={{ "text-decoration": "none", "margin-top": "4px" }}
+              <button
+                type="button"
+                class={yandexButton()}
+                style={{ "margin-top": "4px" }}
+                onClick={() => window.location.assign("/auth/yandex/start")}
               >
-                <button type="button" class={yandexButton()}>
-                  <span class={yandexBadge()}>Я</span>
-                  Войти через Яндекс
-                </button>
-              </a>
+                <span class={yandexBadge()}>Я</span>
+                Войти через Яндекс
+              </button>
             </Column>
           </Column>
         </>
