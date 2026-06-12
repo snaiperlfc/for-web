@@ -184,6 +184,28 @@
     max-height: 52dvh !important;
     z-index: 200 !important;
   }
+  /* The picker scroll wouldn't move because the flex height chain
+     (Base → Container → Stack → scroll div) wasn't bounded, so the
+     overflow-y:scroll element grew to fit all GIFs instead of
+     scrolling. Force every level to flex/min-height:0 so the inner
+     list gets a real, bounded height and scrolls with momentum. */
+  [data-stellis-media-picker] > div {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+  [data-stellis-media-picker] [data-stellis-gif-stack] {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+  }
+  [data-stellis-media-picker] [data-stellis-gif-scroll] {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+  }
 
   /* Panda atomic typography overrides — the actual rule that bites.
      Channel titles, sidebar names, message timestamps etc. use

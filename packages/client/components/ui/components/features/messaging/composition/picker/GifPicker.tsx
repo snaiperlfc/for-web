@@ -50,7 +50,7 @@ export function GifPicker() {
   const fliterLowercase = () => filter().toLowerCase();
 
   return (
-    <Stack>
+    <Stack data-stellis-gif-stack>
       <TextField
         autoFocus
         variant="filled"
@@ -154,7 +154,7 @@ function Categories() {
   });
 
   return (
-    <div ref={targetElement} use:invisibleScrollable>
+    <div ref={targetElement} data-stellis-gif-scroll use:invisibleScrollable>
       <VirtualContainer
         items={items()}
         scrollTarget={targetElement}
@@ -253,7 +253,7 @@ function GifSearch(props: { query: string }) {
   }));
 
   return (
-    <div ref={targetElement} use:invisibleScrollable>
+    <div ref={targetElement} data-stellis-gif-scroll use:invisibleScrollable>
       <VirtualContainer
         items={search.data as never /* resource */}
         scrollTarget={targetElement}
