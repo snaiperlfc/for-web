@@ -205,6 +205,12 @@
     -webkit-overflow-scrolling: touch !important;
     overscroll-behavior: contain !important;
     touch-action: pan-y !important;
+    /* invisibleScrollable sets `will-change: transform`, which on iOS
+       Safari/PWA silently breaks native touch scrolling of an
+       overflow container (works fine in desktop device-emulation,
+       which is why it "scrolls in the simulator"). Clear it. */
+    will-change: auto !important;
+    transform: none !important;
   }
 
   /* Panda atomic typography overrides — the actual rule that bites.
