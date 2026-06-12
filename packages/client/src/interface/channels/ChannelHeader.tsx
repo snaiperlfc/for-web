@@ -8,6 +8,7 @@ import { styled } from "styled-system/jsx";
 import { useClient } from "@revolt/client";
 import { TextWithEmoji } from "@revolt/markdown";
 import { useModals } from "@revolt/modal";
+import { useNavigate } from "@revolt/routing";
 import { useState } from "@revolt/state";
 import { LAYOUT_SECTIONS } from "@revolt/state/stores/Layout";
 import {
@@ -55,6 +56,7 @@ export function ChannelHeader(props: Props) {
   const client = useClient();
   const { t } = useLingui();
   const state = useState();
+  const navigate = useNavigate();
 
   const searchValue = () => {
     if (!props.sidebarState) return null;
@@ -70,27 +72,21 @@ export function ChannelHeader(props: Props) {
   return (
     <>
       {/*
-        STELLIS mobile: hamburger toggle. iOS PWA / Safari claim
-        horizontal swipes for history back/forward, so we can't rely
-        on swipe gestures to switch between chat and nav views. This
-        button always opens the navigation (server rail + channel
-        list). Hidden on desktop via stellis-mobile.css.
+        STELLIS mobile: back arrow → returns to the chat/channel list
+        (home). Telegram-style: a conversation is a full screen you back
+        out of. Replaces the old ☰ hamburger (the bottom tab bar +
+        per-server channel list now cover navigation). Hidden on desktop
+        via stellis-mobile.css.
       */}
       <div
         data-stellis-mobile-menu
         role="button"
         tabIndex={0}
-        onClick={() =>
-          state.layout.setSectionState(
-            LAYOUT_SECTIONS.PRIMARY_SIDEBAR,
-            true,
-            true,
-          )
-        }
-        aria-label="Открыть навигацию"
+        onClick={() => navigate("/app")}
+        aria-label="Назад к списку"
         style={{ display: "none" }}
       >
-        ☰
+        <Symbol size={24}>arrow_back</Symbol>
       </div>
       <Switch>
         <Match

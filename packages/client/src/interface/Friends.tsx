@@ -203,9 +203,13 @@ export function Friends() {
                 </Badge>
               </Show>
             </NavigationRailItem>
-            <NavigationRailItem icon={<Symbol>block</Symbol>} value="blocked">
-              <Trans>Blocked</Trans>
-            </NavigationRailItem>
+            {/* Desktop only: blocked-list filter is rare clutter for a
+                family instance. */}
+            <Show when={!isMobileFriends}>
+              <NavigationRailItem icon={<Symbol>block</Symbol>} value="blocked">
+                <Trans>Blocked</Trans>
+              </NavigationRailItem>
+            </Show>
           </NavigationRail>
 
           <Deferred>
@@ -262,10 +266,31 @@ function People(props: {
   title: string;
   scrollTargetElement: Accessor<HTMLDivElement>;
 }) {
+  const { t } = useLingui();
+
+  // STELLIS: the group titles are passed as English literals from the
+  // call sites. Translate the known ones so the RU UI isn't half-English.
+  const localized = () => {
+    switch (props.title) {
+      case "Online":
+        return t`Online`;
+      case "All":
+        return t`All`;
+      case "Incoming":
+        return t`Incoming`;
+      case "Outgoing":
+        return t`Outgoing`;
+      case "Blocked":
+        return t`Blocked`;
+      default:
+        return props.title;
+    }
+  };
+
   return (
     <List>
       <ListSubheader>
-        {props.title} {"–"} {props.users.length}
+        {localized()} {"–"} {props.users.length}
       </ListSubheader>
 
       <Show when={props.users.length === 0}>
