@@ -460,7 +460,10 @@ export function MessageComposition(props: Props) {
                     </MessageBox.InlineIcon>
                     <MessageBox.InlineIcon size="normal" data-stellis-compose-action="emoji">
                       <IconButton onPress={triggerProps.onClickEmoji}>
-                        <Symbol>emoticon</Symbol>
+                        {/* STELLIS: `emoticon` is not a valid Material Symbol —
+                            it rendered as a broken ":-)" glyph. `mood` is the
+                            real smiley face icon (Telegram-style). */}
+                        <Symbol>mood</Symbol>
                       </IconButton>
                     </MessageBox.InlineIcon>
 
