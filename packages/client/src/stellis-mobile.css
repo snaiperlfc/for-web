@@ -158,6 +158,14 @@
     min-height: 46px !important;
   }
 
+  /* The phone keyboard already has a full emoji set, so the in-app
+     emoji button (a limited custom picker, not present in Telegram on
+     mobile) is just clutter. Hide it on touch; keep it on desktop where
+     there's no system emoji keyboard. */
+  [data-stellis-compose-action="emoji"] {
+    display: none !important;
+  }
+
   /* ── GIF / emoji picker as a bottom sheet ─────────────────────────
      Upstream renders the picker as a fixed 400×400 floating popover
      anchored to the tiny gif button. On a phone it overflows the
