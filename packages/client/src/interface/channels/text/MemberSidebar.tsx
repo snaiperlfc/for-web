@@ -75,6 +75,15 @@ const LARGE_SERVERS = [
  */
 export function ServerMemberSidebar(props: Props) {
   const client = useClient();
+  const { t } = useLingui();
+
+  /**
+   * STELLIS: translate the two system pseudo-group headers ("Online" /
+   * "Offline") in the member list. Custom role names stay as-is (they're
+   * user-defined). Without this they showed English on an otherwise-RU UI.
+   */
+  const groupName = (name: string) =>
+    name === "Online" ? t`Online` : name === "Offline" ? t`Offline` : name;
 
   // todo: useQuery
   createEffect(
@@ -275,7 +284,7 @@ export function ServerMemberSidebar(props: Props) {
                     <Show when={item.item.icon}>
                       <RoleIcon src={item.item.icon} alt="" />
                     </Show>
-                    <span>{(item.item as { name: string }).name}</span>
+                    <span>{groupName((item.item as { name: string }).name)}</span>
                     <span>
                       {" – "}
                       {(item.item as { count: number }).count}

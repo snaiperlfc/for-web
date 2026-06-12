@@ -17,10 +17,10 @@ export function CreateOrJoinServerModal(
     <Dialog
       show={props.show}
       onClose={props.onClose}
-      title="Create or join a server"
+      title={<Trans>Create or join a server</Trans>}
       actions={[
         {
-          text: "Create",
+          text: <Trans>Create</Trans>,
           onClick: () => {
             openModal({
               type: "create_server",
@@ -29,7 +29,7 @@ export function CreateOrJoinServerModal(
           },
         },
         {
-          text: "Join",
+          text: <Trans>Join</Trans>,
           onClick: () => {
             openModal({ type: "join_server", client: props.client });
           },
